@@ -24,11 +24,5 @@ oauth2:
       redirect-uri: 11111
       access-token-uri: 11111
       user-info-uri: 11111
-    google:
-      client-id: 11111
-      client-secret: 11111
-      redirect-uri: 11111
-      access-token-uri: 11111
-      user-info-uri: 11111
 jwt:
   secret: 테스트를하기위해서사용하는의미없는문자열인데쓸게없네이정도면됐지않을까

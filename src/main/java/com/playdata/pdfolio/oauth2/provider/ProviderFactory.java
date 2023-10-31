@@ -9,14 +9,12 @@ import org.springframework.stereotype.Component;
 public class ProviderFactory {
 
     private final GithubProvider githubProvider;
-    private final GoogleProvider googleProvider;
     private final KakaoProvider kaKaoProvider;
 
     public Oauth2Provider getProvider(String providerName){
 
         return switch (providerName) {
             case "github" -> githubProvider;
-            case "google" -> googleProvider;
             case "kakao" -> kaKaoProvider;
             default -> throw new NotSupportedOauth2Exception();
         };
