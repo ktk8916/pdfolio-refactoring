@@ -35,7 +35,4 @@ out/
 
 ### VS Code ###
 .vscode/
-/src/main/resources/application-hhn.yml
-/src/main/resources/application-ksd.yml
-/src/main/resources/application-cyj.yml
-/src/main/resources/application-ktk.yml
+/src/main/resources/application-local.yml
