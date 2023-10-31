@@ -1,6 +1,6 @@
 package com.playdata.pdfolio.project.repository;
 
-import com.playdata.pdfolio.global.type.Skill;
+import com.playdata.pdfolio.global.type.SkillType;
 import com.playdata.pdfolio.project.domain.entity.Project;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,20 +17,20 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, Project
             "join p.member m " +
             "where ps.skill in :skillCategory " +
             "order by p.createdAt desc")
-    Page<Project> searchByConditionOrderByCreatedAt(List<Skill> skillCategory, Pageable pageable);
+    Page<Project> searchByConditionOrderByCreatedAt(List<SkillType> skillTypeCategory, Pageable pageable);
 
     @Query(value = "select distinct p from Project p " +
             "join fetch p.skills ps " +
             "join p.member m " +
             "where ps.skill in :skillCategory " +
             "order by p.viewCount desc")
-    Page<Project> searchByConditionOrderByViewCount(List<Skill> skillCategory, Pageable pageable);
+    Page<Project> searchByConditionOrderByViewCount(List<SkillType> skillTypeCategory, Pageable pageable);
 
     @Query(value = "select distinct p from Project p " +
             "join fetch p.skills ps " +
             "join p.member m " +
             "where ps.skill in :skillCategory " +
             "order by p.heartCount desc")
-    Page<Project> searchByConditionOrderByHeartCount(List<Skill> skillCategory, Pageable pageable);
+    Page<Project> searchByConditionOrderByHeartCount(List<SkillType> skillTypeCategory, Pageable pageable);
 
 }

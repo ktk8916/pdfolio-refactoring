@@ -1,6 +1,6 @@
 package com.playdata.pdfolio.project.domain.request;
 
-import com.playdata.pdfolio.global.type.Skill;
+import com.playdata.pdfolio.global.type.SkillType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,20 +14,20 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProjectSearchSkillCategory {
 
-    private List<Skill> skills;
+    private List<SkillType> skillTypes;
 
     public static ProjectSearchSkillCategory of(String skillCategory) {
         if (skillCategory == null || skillCategory.isBlank()) {
-            return new ProjectSearchSkillCategory(List.of(Skill.values()));
+            return new ProjectSearchSkillCategory(List.of(SkillType.values()));
         }
 
-        List<Skill> skills = Arrays.stream(skillCategory.split(","))
+        List<SkillType> skillTypes = Arrays.stream(skillCategory.split(","))
                 .map(String::trim)
                 .map(String::toUpperCase)
-                .map(Skill::valueOf)
+                .map(SkillType::valueOf)
                 .toList();
 
-        return new ProjectSearchSkillCategory(skills);
+        return new ProjectSearchSkillCategory(skillTypes);
     }
 
 }

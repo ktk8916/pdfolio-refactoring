@@ -1,6 +1,6 @@
 package com.playdata.pdfolio.project.repository;
 
-import com.playdata.pdfolio.global.type.Skill;
+import com.playdata.pdfolio.global.type.SkillType;
 import com.playdata.pdfolio.project.domain.request.ProjectSearchParameter;
 import com.playdata.pdfolio.project.domain.response.ProjectResponse;
 import com.playdata.pdfolio.project.domain.response.ProjectSkillResponse;
@@ -42,7 +42,7 @@ public class ProjectSearchRepositoryImpl implements ProjectSearchRepository{
                 .where(project.id.in(
                         JPAExpressions.select(projectSkill.project.id)
                                 .from(projectSkill)
-                                .where(projectSkillsIn(searchParameter.getSkillCategory().getSkills()))
+                                .where(projectSkillsIn(searchParameter.getSkillCategory().getSkillTypes()))
                 ))
                 .groupBy(project.id, project.skills)
                 .orderBy(project.createdAt.desc())
@@ -51,11 +51,11 @@ public class ProjectSearchRepositoryImpl implements ProjectSearchRepository{
         return null;
     }
 
-    private BooleanExpression projectSkillsIn(List<Skill> Skills) {
-        if (Skills.isEmpty()) {
+    private BooleanExpression projectSkillsIn(List<SkillType> skillTypes) {
+        if (skillTypes.isEmpty()) {
             return null;
         }
 
-        return projectSkill.skill.in(Skills);
+        return projectSkill.skill.in(skillTypes);
     }
 }

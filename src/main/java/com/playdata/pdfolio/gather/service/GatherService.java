@@ -2,7 +2,7 @@ package com.playdata.pdfolio.gather.service;
 
 
 import com.playdata.pdfolio.gather.domain.dto.SearchDto;
-import com.playdata.pdfolio.global.type.Skill;
+import com.playdata.pdfolio.global.type.SkillType;
 import com.playdata.pdfolio.gather.domain.entity.Gather;
 import com.playdata.pdfolio.gather.domain.entity.GatherComment;
 import com.playdata.pdfolio.gather.domain.entity.GatherReply;
@@ -42,16 +42,16 @@ public class GatherService {
 
         Gather gather = gatherRepository.save(writeRequest.toEntity(memberId));
 
-        List<Skill> skills = Skill.of(writeRequest.skills());
-        List<GatherSkill> gatherSkills = createGatherSkills(gather, skills);
+        List<SkillType> skillTypes = SkillType.of(writeRequest.skills());
+        List<GatherSkill> gatherSkills = createGatherSkills(gather, skillTypes);
         gatherSkillRepository.saveAll(gatherSkills);
     }
 
-    private List<GatherSkill> createGatherSkills(Gather gather, List<Skill> skills) {
-        return skills.stream()
+    private List<GatherSkill> createGatherSkills(Gather gather, List<SkillType> skillTypes) {
+        return skillTypes.stream()
                 .map(skill -> GatherSkill.builder()
                         .gather(gather)
-                        .skill(skill)
+                        .skillType(skill)
                         .build())
                 .toList();
     }

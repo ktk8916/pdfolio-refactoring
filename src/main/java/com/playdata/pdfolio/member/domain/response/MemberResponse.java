@@ -1,6 +1,6 @@
 package com.playdata.pdfolio.member.domain.response;
 
-import com.playdata.pdfolio.global.type.Skill;
+import com.playdata.pdfolio.global.type.SkillType;
 import com.playdata.pdfolio.member.domain.entity.Member;
 import com.playdata.pdfolio.member.domain.entity.MemberSkill;
 
@@ -24,8 +24,8 @@ public record MemberResponse(
                 member.getNickname(),
                 member.getImageUrl(),
                 member.getSkills().stream()
-                        .map(MemberSkill::getSkill)
-                        .map(Skill::getSkillName)
+                        .map(MemberSkill::getSkillType)
+                        .map(SkillType::getName)
                         .collect(Collectors.toList())
         );
     }

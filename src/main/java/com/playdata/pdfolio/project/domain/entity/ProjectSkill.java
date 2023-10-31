@@ -1,6 +1,6 @@
 package com.playdata.pdfolio.project.domain.entity;
 
-import com.playdata.pdfolio.global.type.Skill;
+import com.playdata.pdfolio.global.type.SkillType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,10 +26,10 @@ public class ProjectSkill {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Skill skill;
+    private SkillType skillType;
 
     public String getSkillName() {
-        return this.skill.getSkillName();
+        return this.skillType.getName();
     }
 
 }

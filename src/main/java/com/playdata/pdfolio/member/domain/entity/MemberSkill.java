@@ -1,6 +1,6 @@
 package com.playdata.pdfolio.member.domain.entity;
 
-import com.playdata.pdfolio.global.type.Skill;
+import com.playdata.pdfolio.global.type.SkillType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,5 +16,5 @@ public class MemberSkill {
     @ManyToOne
     private Member member;
     @Enumerated(EnumType.STRING)
-    private Skill skill;
+    private SkillType skillType;
 }

@@ -1,6 +1,6 @@
 package com.playdata.pdfolio.member.service;
 
-import com.playdata.pdfolio.global.type.Skill;
+import com.playdata.pdfolio.global.type.SkillType;
 import com.playdata.pdfolio.member.domain.entity.Member;
 import com.playdata.pdfolio.member.domain.entity.MemberSkill;
 import com.playdata.pdfolio.member.domain.request.UpdateRequest;
@@ -54,10 +54,10 @@ public class MemberService {
 
         List<MemberSkill> newSkills = skills
                 .stream()
-                .map(Skill::valueOf)
+                .map(SkillType::valueOf)
                 .map(skill -> MemberSkill.builder()
                         .member(member)
-                        .skill(skill)
+                        .skillType(skill)
                         .build())
                 .collect(Collectors.toList());
 

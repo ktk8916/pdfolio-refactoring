@@ -1,6 +1,6 @@
 package com.playdata.pdfolio.project.domain.response;
 
-import com.playdata.pdfolio.global.type.Skill;
+import com.playdata.pdfolio.global.type.SkillType;
 import com.playdata.pdfolio.project.domain.entity.ProjectSkill;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,12 +15,12 @@ public class ProjectSkillResponse {
 
     private String skillName;
 
-    public ProjectSkillResponse(Skill skill) {
-        this.skillName = skill.getSkillName();
+    public ProjectSkillResponse(SkillType skillType) {
+        this.skillName = skillType.getName();
     }
 
     public static ProjectSkillResponse of(ProjectSkill projectSkill) {
-        return new ProjectSkillResponse(projectSkill.getSkill());
+        return new ProjectSkillResponse(projectSkill.getSkillType());
     }
 
     public static List<ProjectSkillResponse> of(List<ProjectSkill> projectSkills) {

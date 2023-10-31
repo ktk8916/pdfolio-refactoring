@@ -1,7 +1,7 @@
 package com.playdata.pdfolio.gather.repository;
 
 import com.playdata.pdfolio.gather.domain.dto.SearchDto;
-import com.playdata.pdfolio.global.type.Skill;
+import com.playdata.pdfolio.global.type.SkillType;
 import com.playdata.pdfolio.gather.domain.response.GatherResponse;
 import com.playdata.pdfolio.gather.domain.entity.Gather;
 import com.playdata.pdfolio.gather.domain.entity.GatherCategory;
@@ -111,7 +111,7 @@ public class GatherSearchRepositoryImpl implements GatherSearchRepository{
     private BooleanExpression skillEqual2(String getSkills) {
         return getSkills == null || getSkills.isEmpty()
                 ? null
-                : gatherSkill.skill.in(Skill.of(Arrays.asList(getSkills.split(","))));
+                : gatherSkill.skill.in(SkillType.of(Arrays.asList(getSkills.split(","))));
     }
     private BooleanBuilder skillEqualString(String skills) {
         BooleanBuilder builder = new BooleanBuilder();
@@ -119,7 +119,7 @@ public class GatherSearchRepositoryImpl implements GatherSearchRepository{
         if(skills==null || skills.isEmpty() ) return  builder;
         String[] split = skills.split(",");
         for (String c : split) {
-            builder.or(qGatherSkill.skill.in(Skill.valueOf(c)));
+            builder.or(qGatherSkill.skill.in(SkillType.valueOf(c)));
         }
         return builder;
     }

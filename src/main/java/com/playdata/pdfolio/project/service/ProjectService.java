@@ -1,6 +1,6 @@
 package com.playdata.pdfolio.project.service;
 
-import com.playdata.pdfolio.global.type.Skill;
+import com.playdata.pdfolio.global.type.SkillType;
 import com.playdata.pdfolio.member.domain.entity.Member;
 import com.playdata.pdfolio.project.domain.entity.Project;
 import com.playdata.pdfolio.project.domain.entity.ProjectSkill;
@@ -36,21 +36,21 @@ public class ProjectService {
                 .build();
 
         Project project = createProject(request, member);
-        List<Skill> skills = Skill.of(request.getProjectSkills());
+        List<SkillType> skillTypes = SkillType.of(request.getProjectSkills());
 
         Project savedProject = projectRepository.save(project);
 
-        List<ProjectSkill> projectSkills = createProjectSkills(savedProject, skills);
+        List<ProjectSkill> projectSkills = createProjectSkills(savedProject, skillTypes);
         projectSkillRepository.saveAll(projectSkills);
 
         return ProjectCreateResponse.of(savedProject);
     }
 
-    private List<ProjectSkill> createProjectSkills(final Project project, final List<Skill> skills) {
-        return skills.stream()
+    private List<ProjectSkill> createProjectSkills(final Project project, final List<SkillType> skillTypes) {
+        return skillTypes.stream()
                 .map(skill -> ProjectSkill.builder()
                                 .project(project)
-                                .skill(skill)
+                                .skillType(skill)
                                 .build())
                 .toList();
     }
@@ -82,17 +82,17 @@ public class ProjectService {
         Page<Project> projects = null;
         if (sortType.equals("createdAt")) {
             projects = projectRepository.searchByConditionOrderByCreatedAt(
-                    searchParameter.getSkillCategory().getSkills(),
+                    searchParameter.getSkillCategory().getSkillTypes(),
                     searchParameter.getPageable()
             );
         } else if (sortType.equals("viewCount")) {
             projects = projectRepository.searchByConditionOrderByViewCount(
-                    searchParameter.getSkillCategory().getSkills(),
+                    searchParameter.getSkillCategory().getSkillTypes(),
                     searchParameter.getPageable()
             );
         } else if (sortType.equals("heartCount")) {
             projects = projectRepository.searchByConditionOrderByHeartCount(
-                    searchParameter.getSkillCategory().getSkills(),
+                    searchParameter.getSkillCategory().getSkillTypes(),
                     searchParameter.getPageable()
             );
         }
