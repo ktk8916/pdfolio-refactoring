@@ -1,9 +1,9 @@
 package com.playdata.pdfolio.oauth2.controller;
 
-import com.playdata.pdfolio.domain.request.oauth2.LoginRequest;
-import com.playdata.pdfolio.domain.request.oauth2.SignupRequest;
-import com.playdata.pdfolio.domain.response.oauth2.Oauth2Response;
-import com.playdata.pdfolio.domain.response.oauth2.Oauth2StatusResponse;
+import com.playdata.pdfolio.oauth2.domain.request.LoginRequest;
+import com.playdata.pdfolio.oauth2.domain.request.SignupRequest;
+import com.playdata.pdfolio.oauth2.domain.response.Oauth2Response;
+import com.playdata.pdfolio.oauth2.domain.response.Oauth2StatusResponse;
 import com.playdata.pdfolio.oauth2.service.Oauth2Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

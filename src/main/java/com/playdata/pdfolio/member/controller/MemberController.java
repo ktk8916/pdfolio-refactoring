@@ -1,10 +1,9 @@
 package com.playdata.pdfolio.member.controller;
 
-import com.playdata.pdfolio.auth.UserInfo;
-import com.playdata.pdfolio.domain.entity.member.Member;
-import com.playdata.pdfolio.domain.request.member.UpdateRequest;
-import com.playdata.pdfolio.domain.request.project.ProjectCreateRequest;
-import com.playdata.pdfolio.domain.response.member.MemberResponse;
+import com.playdata.pdfolio.jwt.TokenInfo;
+import com.playdata.pdfolio.member.domain.entity.Member;
+import com.playdata.pdfolio.member.domain.request.UpdateRequest;
+import com.playdata.pdfolio.member.domain.response.MemberResponse;
 import com.playdata.pdfolio.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,32 +19,32 @@ public class MemberController {
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
-    public void withdraw(@AuthenticationPrincipal UserInfo userInfo){
-        memberService.withdraw(userInfo.getMemberId());
+    public void withdraw(@AuthenticationPrincipal TokenInfo tokenInfo){
+        memberService.withdraw(tokenInfo.getMemberId());
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public MemberResponse me(@AuthenticationPrincipal UserInfo userInfo){
-        Member member = memberService.findByIdFetchMemberSkill(userInfo.getMemberId());
+    public MemberResponse me(@AuthenticationPrincipal TokenInfo tokenInfo){
+        Member member = memberService.findByIdFetchMemberSkill(tokenInfo.getMemberId());
         return MemberResponse.from(member);
     }
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void updateBasic(
-            @AuthenticationPrincipal UserInfo userInfo,
+            @AuthenticationPrincipal TokenInfo tokenInfo,
             @RequestBody UpdateRequest updateRequest){
-        memberService.updateBasic(userInfo.getMemberId(), updateRequest);
+        memberService.updateBasic(tokenInfo.getMemberId(), updateRequest);
     }
 
     @PutMapping("/all")
     @ResponseStatus(HttpStatus.CREATED)
     public void updateContainSkills(
-            @AuthenticationPrincipal UserInfo userInfo,
+            @AuthenticationPrincipal TokenInfo tokenInfo,
             @RequestBody UpdateRequest updateRequest)
     {
         memberService.updateContainSkills(
-                userInfo.getMemberId(),
+                tokenInfo.getMemberId(),
                 updateRequest);
     }
 

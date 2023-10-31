@@ -13,23 +13,12 @@ public class ProviderFactory {
     private final KakaoProvider kaKaoProvider;
 
     public Oauth2Provider getProvider(String providerName){
-        Oauth2Provider returnType = null;
-        switch (providerName){
-            case "github":
-                returnType = githubProvider;
-                break;
-            case "google":
-                returnType = googleProvider;
-                break;
-            case "kakao":
-                returnType = kaKaoProvider;
-                break;
-            default:
-                throw new NotSupportedOauth2Exception();
-        }
 
-        return returnType;
+        return switch (providerName) {
+            case "github" -> githubProvider;
+            case "google" -> googleProvider;
+            case "kakao" -> kaKaoProvider;
+            default -> throw new NotSupportedOauth2Exception();
+        };
     }
-
-
 }

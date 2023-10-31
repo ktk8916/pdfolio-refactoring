@@ -1,16 +1,16 @@
 package com.playdata.pdfolio.project.service;
 
-import com.playdata.pdfolio.domain.entity.common.Skill;
-import com.playdata.pdfolio.domain.entity.member.Member;
-import com.playdata.pdfolio.domain.entity.project.Project;
-import com.playdata.pdfolio.domain.entity.project.ProjectSkill;
-import com.playdata.pdfolio.domain.entity.project.Url;
-import com.playdata.pdfolio.domain.request.project.ProjectCreateRequest;
-import com.playdata.pdfolio.domain.request.project.ProjectSearchParameter;
-import com.playdata.pdfolio.domain.response.project.ProjectCreateResponse;
-import com.playdata.pdfolio.domain.response.project.ProjectDetailResponse;
-import com.playdata.pdfolio.domain.response.project.ProjectListResponse;
-import com.playdata.pdfolio.domain.response.project.ProjectResponse;
+import com.playdata.pdfolio.global.type.Skill;
+import com.playdata.pdfolio.member.domain.entity.Member;
+import com.playdata.pdfolio.project.domain.entity.Project;
+import com.playdata.pdfolio.project.domain.entity.ProjectSkill;
+import com.playdata.pdfolio.project.domain.entity.Url;
+import com.playdata.pdfolio.project.domain.request.ProjectCreateRequest;
+import com.playdata.pdfolio.project.domain.request.ProjectSearchParameter;
+import com.playdata.pdfolio.project.domain.response.ProjectCreateResponse;
+import com.playdata.pdfolio.project.domain.response.ProjectDetailResponse;
+import com.playdata.pdfolio.project.domain.response.ProjectListResponse;
+import com.playdata.pdfolio.project.domain.response.ProjectResponse;
 import com.playdata.pdfolio.project.exception.ProjectNotFoundException;
 import com.playdata.pdfolio.project.repository.ProjectRepository;
 import com.playdata.pdfolio.project.repository.ProjectSkillRepository;

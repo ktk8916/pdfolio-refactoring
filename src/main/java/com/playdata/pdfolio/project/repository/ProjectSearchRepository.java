@@ -1,7 +1,7 @@
 package com.playdata.pdfolio.project.repository;
 
-import com.playdata.pdfolio.domain.request.project.ProjectSearchParameter;
-import com.playdata.pdfolio.domain.response.project.ProjectResponse;
+import com.playdata.pdfolio.project.domain.request.ProjectSearchParameter;
+import com.playdata.pdfolio.project.domain.response.ProjectResponse;
 import org.springframework.data.domain.Page;
 
 public interface ProjectSearchRepository {

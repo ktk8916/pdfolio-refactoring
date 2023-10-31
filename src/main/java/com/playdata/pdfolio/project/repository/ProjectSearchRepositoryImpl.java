@@ -1,10 +1,10 @@
 package com.playdata.pdfolio.project.repository;
 
-import com.playdata.pdfolio.domain.entity.common.Skill;
-import com.playdata.pdfolio.domain.request.project.ProjectSearchParameter;
-import com.playdata.pdfolio.domain.response.project.ProjectResponse;
-import com.playdata.pdfolio.domain.response.project.ProjectSkillResponse;
-import com.playdata.pdfolio.domain.response.project.TempProjectResponse;
+import com.playdata.pdfolio.global.type.Skill;
+import com.playdata.pdfolio.project.domain.request.ProjectSearchParameter;
+import com.playdata.pdfolio.project.domain.response.ProjectResponse;
+import com.playdata.pdfolio.project.domain.response.ProjectSkillResponse;
+import com.playdata.pdfolio.project.domain.response.TempProjectResponse;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;

@@ -1,6 +1,6 @@
 package com.playdata.pdfolio.global.domain.entity;
 
-import com.playdata.pdfolio.domain.entity.common.BaseEntity;
+import com.playdata.pdfolio.global.BaseEntity;
 import com.playdata.pdfolio.global.exception.ColumnAlreadyDeletedException;
 import com.playdata.pdfolio.global.exception.ExceptionType;
 import org.junit.jupiter.api.Test;

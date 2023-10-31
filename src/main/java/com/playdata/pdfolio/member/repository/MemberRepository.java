@@ -1,6 +1,6 @@
 package com.playdata.pdfolio.member.repository;
 
-import com.playdata.pdfolio.domain.entity.member.Member;
+import com.playdata.pdfolio.member.domain.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -2,6 +2,8 @@ package com.playdata.pdfolio.domain.entity.common;
 
 import com.playdata.pdfolio.global.exception.NoSuchSkillException;
 import com.playdata.pdfolio.global.exception.PdFolioException;
+import com.playdata.pdfolio.global.type.Skill;
+import com.playdata.pdfolio.global.type.SkillCategory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -37,7 +39,7 @@ class SkillTest {
         // 만들어진 Skill들의 category 확인 테스트
         assertThat(skills)
                 .extracting(Skill::getCategory)
-                .extracting(com.playdata.pdfolio.domain.entity.common.SkillCategory::getSkillCategoryName)
+                .extracting(SkillCategory::getSkillCategoryName)
                 .containsOnly(categoryName);
     }
 

@@ -1,10 +1,8 @@
 package com.playdata.pdfolio.member.repository;
 
-import com.playdata.pdfolio.domain.entity.member.Member;
-import com.playdata.pdfolio.domain.entity.member.MemberSkill;
+import com.playdata.pdfolio.member.domain.entity.Member;
+import com.playdata.pdfolio.member.domain.entity.MemberSkill;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 

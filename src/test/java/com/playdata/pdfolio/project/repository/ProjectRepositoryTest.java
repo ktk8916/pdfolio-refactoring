@@ -1,10 +1,8 @@
 package com.playdata.pdfolio.project.repository;
 
 import com.playdata.pdfolio.RepositoryTest;
-import com.playdata.pdfolio.domain.request.project.ProjectSearchParameter;
+import com.playdata.pdfolio.project.domain.request.ProjectSearchParameter;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class ProjectRepositoryTest extends RepositoryTest {
 

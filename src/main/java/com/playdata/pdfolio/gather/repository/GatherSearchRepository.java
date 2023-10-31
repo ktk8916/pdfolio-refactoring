@@ -1,12 +1,10 @@
 package com.playdata.pdfolio.gather.repository;
 
-import com.playdata.pdfolio.domain.dto.gather.SearchDto;
-import com.playdata.pdfolio.domain.entity.gather.Gather;
-import com.playdata.pdfolio.domain.response.gather.GatherResponse;
+import com.playdata.pdfolio.gather.domain.dto.SearchDto;
+import com.playdata.pdfolio.gather.domain.entity.Gather;
+import com.playdata.pdfolio.gather.domain.response.GatherResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-
-import java.util.Optional;
 
 public interface GatherSearchRepository {
     Page<GatherResponse> findAllByCondition(

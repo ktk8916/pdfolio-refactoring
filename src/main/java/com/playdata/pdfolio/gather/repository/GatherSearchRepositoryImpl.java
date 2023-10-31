@@ -1,25 +1,22 @@
 package com.playdata.pdfolio.gather.repository;
 
-import com.playdata.pdfolio.domain.dto.gather.SearchDto;
-import com.playdata.pdfolio.domain.entity.common.Skill;
-import com.playdata.pdfolio.domain.entity.gather.*;
-import com.playdata.pdfolio.domain.response.gather.GatherResponse;
+import com.playdata.pdfolio.gather.domain.dto.SearchDto;
+import com.playdata.pdfolio.global.type.Skill;
+import com.playdata.pdfolio.gather.domain.response.GatherResponse;
+import com.playdata.pdfolio.gather.domain.entity.Gather;
+import com.playdata.pdfolio.gather.domain.entity.GatherCategory;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Repository;
 
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static com.playdata.pdfolio.domain.entity.gather.QGather.gather;
 import static com.playdata.pdfolio.domain.entity.gather.QGatherSkill.*;

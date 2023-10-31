@@ -1,9 +1,9 @@
 package com.playdata.pdfolio.member.service;
 
-import com.playdata.pdfolio.domain.entity.common.Skill;
-import com.playdata.pdfolio.domain.entity.member.Member;
-import com.playdata.pdfolio.domain.entity.member.MemberSkill;
-import com.playdata.pdfolio.domain.request.member.UpdateRequest;
+import com.playdata.pdfolio.global.type.Skill;
+import com.playdata.pdfolio.member.domain.entity.Member;
+import com.playdata.pdfolio.member.domain.entity.MemberSkill;
+import com.playdata.pdfolio.member.domain.request.UpdateRequest;
 import com.playdata.pdfolio.global.exception.ExceptionType;
 import com.playdata.pdfolio.member.exception.MemberNotFoundException;
 import com.playdata.pdfolio.member.repository.MemberRepository;
@@ -67,7 +67,7 @@ class MemberServiceTest {
             Member findMember = memberService.findById(id);
             //then
             assertThat(findMember.getId()).isEqualTo(member.getId());
-            assertThat(findMember.getNickName()).isEqualTo(member.getNickName());
+            assertThat(findMember.getNickname()).isEqualTo(member.getNickname());
             assertThat(findMember.getImageUrl()).isEqualTo(member.getImageUrl());
         }
 
@@ -122,7 +122,7 @@ class MemberServiceTest {
             memberService.updateBasic(member.getId(), updateRequest);
 
             //then
-            assertThat(member.getNickName()).isEqualTo(newNickName);
+            assertThat(member.getNickname()).isEqualTo(newNickName);
             assertThat(member.getImageUrl()).isEqualTo(newImageUrl);
         }
 
@@ -147,7 +147,7 @@ class MemberServiceTest {
                     .collect(Collectors.toList());
 
             //then
-            assertThat(member.getNickName()).isEqualTo(newNickName);
+            assertThat(member.getNickname()).isEqualTo(newNickName);
             assertThat(member.getImageUrl()).isEqualTo(newImageUrl);
             assertThat(skills).containsAll(newSkills);
         }

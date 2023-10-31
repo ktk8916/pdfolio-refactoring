@@ -1,14 +1,13 @@
 package com.playdata.pdfolio.project.controller;
 
-import com.playdata.pdfolio.auth.UserInfo;
-import com.playdata.pdfolio.domain.request.project.ProjectCreateRequest;
-import com.playdata.pdfolio.domain.request.project.ProjectSearchParameter;
-import com.playdata.pdfolio.domain.response.project.ProjectCreateResponse;
-import com.playdata.pdfolio.domain.response.project.ProjectDetailResponse;
-import com.playdata.pdfolio.domain.response.project.ProjectListResponse;
+import com.playdata.pdfolio.jwt.TokenInfo;
+import com.playdata.pdfolio.project.domain.request.ProjectCreateRequest;
+import com.playdata.pdfolio.project.domain.request.ProjectSearchParameter;
+import com.playdata.pdfolio.project.domain.response.ProjectCreateResponse;
+import com.playdata.pdfolio.project.domain.response.ProjectDetailResponse;
+import com.playdata.pdfolio.project.domain.response.ProjectListResponse;
 import com.playdata.pdfolio.project.resolver.ProjectSearchParams;
 import com.playdata.pdfolio.project.service.ProjectService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +26,10 @@ public class ProjectController {
     @PostMapping
     public ResponseEntity<ProjectCreateResponse> save(
             @RequestBody ProjectCreateRequest projectCreateRequest,
-            @AuthenticationPrincipal UserInfo userInfo) {
+            @AuthenticationPrincipal TokenInfo tokenInfo) {
         ProjectCreateResponse response = projectService.save(
                 projectCreateRequest,
-                userInfo.getMemberId());
+                tokenInfo.getMemberId());
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)

@@ -1,7 +1,7 @@
 package com.playdata.pdfolio.project.repository;
 
-import com.playdata.pdfolio.domain.entity.common.Skill;
-import com.playdata.pdfolio.domain.entity.project.Project;
+import com.playdata.pdfolio.global.type.Skill;
+import com.playdata.pdfolio.project.domain.entity.Project;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

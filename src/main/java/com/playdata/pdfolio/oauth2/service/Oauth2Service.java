@@ -1,20 +1,19 @@
 package com.playdata.pdfolio.oauth2.service;
 
-import com.playdata.pdfolio.auth.service.AuthService;
-import com.playdata.pdfolio.domain.dto.jwt.TokenDto;
-import com.playdata.pdfolio.domain.dto.oauth2.LoginInfoDto;
-import com.playdata.pdfolio.domain.entity.common.Skill;
-import com.playdata.pdfolio.domain.entity.member.Member;
-import com.playdata.pdfolio.domain.entity.member.MemberSkill;
-import com.playdata.pdfolio.domain.entity.oauth2.Oauth2AccessToken;
-import com.playdata.pdfolio.domain.entity.oauth2.Oauth2UserInfo;
-import com.playdata.pdfolio.domain.request.oauth2.LoginRequest;
-import com.playdata.pdfolio.domain.request.oauth2.SignupRequest;
-import com.playdata.pdfolio.domain.response.oauth2.Oauth2Response;
-import com.playdata.pdfolio.domain.response.oauth2.Oauth2StatusResponse;
+import com.playdata.pdfolio.global.type.Skill;
+import com.playdata.pdfolio.member.domain.entity.Member;
+import com.playdata.pdfolio.member.domain.entity.MemberSkill;
 import com.playdata.pdfolio.member.exception.UnregisteredMemberException;
 import com.playdata.pdfolio.member.repository.MemberRepository;
 import com.playdata.pdfolio.member.repository.MemberSkillRepository;
+import com.playdata.pdfolio.oauth2.domain.dto.LoginInfoDto;
+import com.playdata.pdfolio.oauth2.domain.dto.TokenDto;
+import com.playdata.pdfolio.oauth2.domain.entity.Oauth2AccessToken;
+import com.playdata.pdfolio.oauth2.domain.entity.Oauth2UserInfo;
+import com.playdata.pdfolio.oauth2.domain.request.LoginRequest;
+import com.playdata.pdfolio.oauth2.domain.request.SignupRequest;
+import com.playdata.pdfolio.oauth2.domain.response.Oauth2Response;
+import com.playdata.pdfolio.oauth2.domain.response.Oauth2StatusResponse;
 import com.playdata.pdfolio.oauth2.provider.Oauth2Provider;
 import com.playdata.pdfolio.oauth2.provider.ProviderFactory;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,7 +38,6 @@ import java.util.stream.Collectors;
 public class Oauth2Service {
 
     private final ProviderFactory providerFactory;
-    private final AuthService authService;
     private final MemberRepository memberRepository;
     private final MemberSkillRepository memberSkillRepository;
 
@@ -54,7 +55,7 @@ public class Oauth2Service {
                 member.getId(),
                 providerName,
                 userInfo.getUserName(),
-                member.getNickName());
+                member.getNickname());
         return new Oauth2Response(loginInfoDto, token);
     }
 
@@ -84,7 +85,7 @@ public class Oauth2Service {
                 member.getId(),
                 providerName,
                 userInfo.getUserName(),
-                member.getNickName());
+                member.getNickname());
         return new Oauth2Response(loginInfoDto, token);
     }
 

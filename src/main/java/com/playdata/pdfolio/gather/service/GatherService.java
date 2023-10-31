@@ -1,17 +1,17 @@
 package com.playdata.pdfolio.gather.service;
 
 
-import com.playdata.pdfolio.domain.dto.gather.SearchDto;
-import com.playdata.pdfolio.domain.entity.common.Skill;
-import com.playdata.pdfolio.domain.entity.gather.Gather;
-import com.playdata.pdfolio.domain.entity.gather.GatherComment;
-import com.playdata.pdfolio.domain.entity.gather.GatherReply;
-import com.playdata.pdfolio.domain.entity.gather.GatherSkill;
-import com.playdata.pdfolio.domain.request.gather.WriteCommentRequest;
-import com.playdata.pdfolio.domain.request.gather.WriteReplyRequest;
-import com.playdata.pdfolio.domain.request.gather.WriteRequest;
-import com.playdata.pdfolio.domain.response.gather.GatherDetailResponse;
-import com.playdata.pdfolio.domain.response.gather.GatherResponse;
+import com.playdata.pdfolio.gather.domain.dto.SearchDto;
+import com.playdata.pdfolio.global.type.Skill;
+import com.playdata.pdfolio.gather.domain.entity.Gather;
+import com.playdata.pdfolio.gather.domain.entity.GatherComment;
+import com.playdata.pdfolio.gather.domain.entity.GatherReply;
+import com.playdata.pdfolio.gather.domain.entity.GatherSkill;
+import com.playdata.pdfolio.gather.domain.request.WriteCommentRequest;
+import com.playdata.pdfolio.gather.domain.request.WriteReplyRequest;
+import com.playdata.pdfolio.gather.domain.request.WriteRequest;
+import com.playdata.pdfolio.gather.domain.response.GatherDetailResponse;
+import com.playdata.pdfolio.gather.domain.response.GatherResponse;
 import com.playdata.pdfolio.gather.repository.GatherCommentRepository;
 import com.playdata.pdfolio.gather.repository.GatherReplyRepository;
 import com.playdata.pdfolio.gather.repository.GatherRepository;

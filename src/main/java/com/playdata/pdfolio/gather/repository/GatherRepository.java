@@ -1,10 +1,6 @@
 package com.playdata.pdfolio.gather.repository;
 
-import com.playdata.pdfolio.domain.entity.gather.Gather;
-import com.playdata.pdfolio.domain.entity.gather.GatherCategory;
-import com.playdata.pdfolio.domain.response.gather.GatherResponse;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.playdata.pdfolio.gather.domain.entity.Gather;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

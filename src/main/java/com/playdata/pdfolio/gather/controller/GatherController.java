@@ -1,13 +1,13 @@
 package com.playdata.pdfolio.gather.controller;
 
 
-import com.playdata.pdfolio.auth.UserInfo;
-import com.playdata.pdfolio.domain.dto.gather.SearchDto;
-import com.playdata.pdfolio.domain.request.gather.WriteCommentRequest;
-import com.playdata.pdfolio.domain.request.gather.WriteReplyRequest;
-import com.playdata.pdfolio.domain.request.gather.WriteRequest;
-import com.playdata.pdfolio.domain.response.gather.GatherDetailResponse;
-import com.playdata.pdfolio.domain.response.gather.GatherResponse;
+import com.playdata.pdfolio.jwt.TokenInfo;
+import com.playdata.pdfolio.gather.domain.dto.SearchDto;
+import com.playdata.pdfolio.gather.domain.request.WriteCommentRequest;
+import com.playdata.pdfolio.gather.domain.request.WriteReplyRequest;
+import com.playdata.pdfolio.gather.domain.request.WriteRequest;
+import com.playdata.pdfolio.gather.domain.response.GatherDetailResponse;
+import com.playdata.pdfolio.gather.domain.response.GatherResponse;
 import com.playdata.pdfolio.gather.service.GatherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,18 +26,18 @@ public class GatherController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void GatherWrite(
-            @AuthenticationPrincipal UserInfo userInfo,
+            @AuthenticationPrincipal TokenInfo tokenInfo,
             @RequestBody WriteRequest writeRequest){
-        gatherService.writeGather(writeRequest, userInfo.getMemberId());
+        gatherService.writeGather(writeRequest, tokenInfo.getMemberId());
     }
     // 모집글 수정
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public void GatherModify(@PathVariable(name = "id") Long id,
-                             @AuthenticationPrincipal UserInfo userInfo,
+                             @AuthenticationPrincipal TokenInfo tokenInfo,
                              @RequestBody WriteRequest writeRequest)
     {
-        gatherService.modifyGather(writeRequest, id, userInfo.getMemberId());
+        gatherService.modifyGather(writeRequest, id, tokenInfo.getMemberId());
     }
     // 모집글 삭제
     @DeleteMapping("/{id}")
@@ -78,9 +78,9 @@ public class GatherController {
     @ResponseStatus(HttpStatus.CREATED)
     public void GatherCommentWrite(
             @RequestBody WriteCommentRequest writeCommentRequest,
-            @AuthenticationPrincipal UserInfo userInfo
+            @AuthenticationPrincipal TokenInfo tokenInfo
     ){
-        gatherService.writeGatherComment(writeCommentRequest,userInfo.getMemberId());
+        gatherService.writeGatherComment(writeCommentRequest, tokenInfo.getMemberId());
     }
     // 코멘트 수정
     @PutMapping("/comment/{id}")
@@ -102,9 +102,9 @@ public class GatherController {
     @ResponseStatus(HttpStatus.CREATED)
     public void GatherReplyWrite(
             @RequestBody WriteReplyRequest writeReplyRequest,
-            @AuthenticationPrincipal UserInfo userInfo
+            @AuthenticationPrincipal TokenInfo tokenInfo
     ){
-        gatherService.writeGatherReply(writeReplyRequest,userInfo.getMemberId());
+        gatherService.writeGatherReply(writeReplyRequest, tokenInfo.getMemberId());
     }
 
     // 리플라이 수정
