@@ -1,11 +1,8 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:pdfolio
+    url: jdbc:h2:mem:test
     username: sa
     password:
-  h2:
-    console:
-      enabled: true
   jpa:
     hibernate:
       ddl-auto: create
@@ -13,3 +10,25 @@ spring:
     properties:
       hibernate:
         format_sql: true
+oauth2:
+  user:
+    github:
+      client-id: 11111
+      client-secret: 11111
+      redirect-uri: 11111
+      access-token-uri: 11111
+      user-info-uri: 11111
+    kakao:
+      client-id: 11111
+      client-secret: 11111
+      redirect-uri: 11111
+      access-token-uri: 11111
+      user-info-uri: 11111
+    google:
+      client-id: 11111
+      client-secret: 11111
+      redirect-uri: 11111
+      access-token-uri: 11111
+      user-info-uri: 11111
+jwt:
+  secret: 테스트를하기위해서사용하는의미없는문자열인데쓸게없네이정도면됐지않을까
