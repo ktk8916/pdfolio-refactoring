@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    Optional<Member> findByProviderIdAndProviderName(String id, String name);
+    Optional<Member> findByProviderAndProviderId(String provider, String providerId);
     @Query("select m from Member m " +
             "join fetch m.skills " +
             "where m.id = :id")

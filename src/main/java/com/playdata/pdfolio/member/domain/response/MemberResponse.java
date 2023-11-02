@@ -20,7 +20,7 @@ public record MemberResponse(
         return new MemberResponse(
                 member.getId(),
                 member.getName(),
-                member.getProviderName(),
+                member.getProvider(),
                 member.getNickname(),
                 member.getImageUrl(),
                 member.getSkills().stream()

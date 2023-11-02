@@ -32,7 +32,7 @@ public class MemberInfoResponse {
                 member.getId(),
                 member.getNickname(),
                 member.getProviderId(),
-                member.getProviderName(),
+                member.getProvider(),
                 member.getImageUrl()
         );
     }
