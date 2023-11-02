@@ -15,7 +15,6 @@ public enum Oauth2UserInfo {
         public Oauth2UserInfo extract(Map<String, Object> attributes) {
             Map<String, Object> properties = (Map<String, Object>)attributes.get("properties");
             super.providerId = String.valueOf(attributes.get("id"));
-            super.username = (String) properties.get("nickname");
             return this;
         }
     },
@@ -24,19 +23,15 @@ public enum Oauth2UserInfo {
         @Override
         public Oauth2UserInfo extract(Map<String, Object> attributes) {
             super.providerId = String.valueOf(attributes.get("id"));
-            super.username = (String) attributes.get("login");
             return this;
         }
     };
 
     private final String provider;
     protected String providerId;
-    protected String username;
-    protected String imageUrl;
-
-    public static Oauth2UserInfo of(String providerName, Map<String, Object> attributes) {
+    public static Oauth2UserInfo of(String provider, Map<String, Object> attributes) {
         return Arrays.stream(values())
-                .filter(provider->provider.provider.equals(providerName))
+                .filter(oauth2UserInfo -> oauth2UserInfo.provider.equals(provider))
                 .findFirst()
                 .orElseThrow(NotSupportedOauth2Exception::new)
                 .extract(attributes);
