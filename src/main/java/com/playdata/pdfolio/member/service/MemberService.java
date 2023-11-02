@@ -63,10 +63,6 @@ public class MemberService {
 
     public void withdraw(Long memberId) {
         Member member = findById(memberId);
-
-        memberSkillRepository.deleteByMember(member);
-        memberRepository.delete(member);
+        member.withdraw();
     }
-
-
 }

@@ -30,17 +30,13 @@ public class MemberController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void editProfile(
-            @AuthenticationPrincipal TokenInfo tokenInfo,
-            @RequestBody UpdateRequest updateRequest){
+    public void editProfile(@AuthenticationPrincipal TokenInfo tokenInfo, @RequestBody UpdateRequest updateRequest){
         memberService.editProfile(tokenInfo.getId(), updateRequest);
     }
 
     @DeleteMapping
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void withdraw(@AuthenticationPrincipal TokenInfo tokenInfo){
-        memberService.withdraw(tokenInfo.getMemberId());
+        memberService.withdraw(tokenInfo.getId());
     }
-
-
 }
