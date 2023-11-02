@@ -1,10 +1,9 @@
 package com.playdata.pdfolio.member.controller;
 
 import com.playdata.pdfolio.jwt.TokenInfo;
-import com.playdata.pdfolio.member.domain.entity.Member;
 import com.playdata.pdfolio.member.domain.request.SignupRequest;
 import com.playdata.pdfolio.member.domain.request.UpdateRequest;
-import com.playdata.pdfolio.member.domain.response.MemberResponse;
+import com.playdata.pdfolio.member.domain.response.MemberDetailResponse;
 import com.playdata.pdfolio.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +16,11 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
+
+    @GetMapping("/me")
+    public MemberDetailResponse getMyProfile(@AuthenticationPrincipal TokenInfo tokenInfo){
+        return memberService.getMyProfile(tokenInfo.getId());
+    }
 
     @PutMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
@@ -38,10 +42,5 @@ public class MemberController {
         memberService.withdraw(tokenInfo.getMemberId());
     }
 
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public MemberResponse me(@AuthenticationPrincipal TokenInfo tokenInfo){
-        Member member = memberService.findByIdFetchMemberSkill(tokenInfo.getMemberId());
-        return MemberResponse.from(member);
-    }
+
 }

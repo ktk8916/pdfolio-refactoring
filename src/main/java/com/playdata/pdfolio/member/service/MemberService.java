@@ -5,15 +5,13 @@ import com.playdata.pdfolio.member.domain.entity.Member;
 import com.playdata.pdfolio.member.domain.entity.MemberSkill;
 import com.playdata.pdfolio.member.domain.request.SignupRequest;
 import com.playdata.pdfolio.member.domain.request.UpdateRequest;
+import com.playdata.pdfolio.member.domain.response.MemberDetailResponse;
 import com.playdata.pdfolio.member.exception.MemberNotFoundException;
 import com.playdata.pdfolio.member.repository.MemberRepository;
 import com.playdata.pdfolio.member.repository.MemberSkillRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +20,10 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final MemberSkillRepository memberSkillRepository;
+
+    public MemberDetailResponse getMyProfile(Long id){
+        return MemberDetailResponse.fromEntity(findByIdFetchSkill(id));
+    }
 
     public void signup(Long id, SignupRequest signupRequest) {
         Member member = findById(id);
@@ -39,7 +41,7 @@ public class MemberService {
         Member member = findByIdFetchSkill(id);
 
         member.update(
-                updateRequest.nickName(),
+                updateRequest.nickname(),
                 updateRequest.imageUrl(),
                 SkillType.convertList(updateRequest.skills()).stream()
                         .map(skillType -> MemberSkill.of(member, skillType))
@@ -57,22 +59,6 @@ public class MemberService {
         return memberRepository
                 .findById(id)
                 .orElseThrow(MemberNotFoundException::new);
-    }
-
-    private void changeMemberSkill(Long id, List<String> skills){
-        Member member = findById(id);
-        memberSkillRepository.deleteByMember(member);
-
-        List<MemberSkill> newSkills = skills
-                .stream()
-                .map(SkillType::valueOf)
-                .map(skill -> MemberSkill.builder()
-                        .member(member)
-                        .skillType(skill)
-                        .build())
-                .collect(Collectors.toList());
-
-        memberSkillRepository.saveAll(newSkills);
     }
 
     public void withdraw(Long memberId) {
