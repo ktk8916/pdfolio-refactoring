@@ -1,6 +1,6 @@
 package com.playdata.pdfolio.global.type;
 
-import com.playdata.pdfolio.global.exception.NoSuchSkillException;
+import com.playdata.pdfolio.global.exception.NoMatchingSkillTypeException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -45,18 +45,18 @@ public enum SkillType {
 
     ;
 
-    private final String name;
+    private final String text;
 
-    public static List<SkillType> of(List<String> skillNames) {
-        return skillNames.stream()
-                .map(SkillType::findSkillType)
+    public static List<SkillType> convertList(List<String> skills) {
+        return skills.stream()
+                .map(SkillType::fromName)
                 .collect(Collectors.toList());
     }
 
-    private static SkillType findSkillType(String skillName) {
+    public static SkillType fromName(String skill) {
         return Arrays.stream(values())
-                .filter(skillType -> skillType.getName().equals(skillName.toUpperCase()))
+                .filter(skillType -> skillType.name().equalsIgnoreCase(skill))
                 .findFirst()
-                .orElseThrow(NoSuchSkillException::new);
+                .orElseThrow(NoMatchingSkillTypeException::new);
     }
 }
