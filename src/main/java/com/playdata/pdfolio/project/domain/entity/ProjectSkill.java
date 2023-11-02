@@ -9,11 +9,6 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @Getter
-@Table(
-        indexes = {
-                @Index(name = "idx_project_skill_skill", columnList = "skill")
-        }
-)
 public class ProjectSkill {
 
     @Id
