@@ -49,8 +49,9 @@ public enum SkillType {
 
     public static List<SkillType> convertList(List<String> skills) {
         return skills.stream()
+                .distinct()
                 .map(SkillType::fromName)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public static SkillType fromName(String skill) {
