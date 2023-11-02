@@ -2,8 +2,10 @@ package com.playdata.pdfolio.member.service;
 
 import com.playdata.pdfolio.global.type.SkillType;
 import com.playdata.pdfolio.member.domain.entity.Member;
+import com.playdata.pdfolio.member.domain.entity.MemberSkill;
 import com.playdata.pdfolio.member.domain.entity.MemberStatus;
 import com.playdata.pdfolio.member.domain.request.SignupRequest;
+import com.playdata.pdfolio.member.domain.request.UpdateRequest;
 import com.playdata.pdfolio.member.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
@@ -33,8 +35,7 @@ class MemberServiceTest {
     @Test
     void signup(){
         // given
-        Member member = memberRepository.save(Member.builder()
-                .build());
+        Member member = memberRepository.save(Member.builder().build());
         SignupRequest signupRequest = new SignupRequest("nick", "www.cdn.com", List.of("java", "spring"));
 
         clearContext();
@@ -48,8 +49,35 @@ class MemberServiceTest {
         assertThat(findMember.getNickname()).isEqualTo("nick");
         assertThat(findMember.getImageUrl()).isEqualTo("www.cdn.com");
         assertThat(findMember.getStatus()).isEqualTo(MemberStatus.MEMBER);
-        assertThat(findMember.getSkills())
+        assertThat(findMember.getSkills()).hasSize(2)
                 .extracting("skillType")
+                .containsExactlyInAnyOrder(SkillType.JAVA, SkillType.SPRING);
+    }
+
+    @DisplayName("회원정보를 수정한다.")
+    @Test
+    void editProfile(){
+        // given
+        Member member = Member.builder()
+                .nickname("before")
+                .imageUrl("www.before.com")
+                .skills(List.of(MemberSkill.builder().skillType(SkillType.PHP).build()))
+                .build();
+        Member savedMember = memberRepository.save(member);
+        UpdateRequest updateRequest = new UpdateRequest("nick", "www.cdn.com", List.of("java", "spring"));
+
+        clearContext();
+
+        // when
+        memberService.editProfile(savedMember.getId(), updateRequest);
+
+        // then
+        Member findMember = memberRepository.findById(savedMember.getId()).get();
+
+        assertThat(findMember.getNickname()).isEqualTo("nick");
+        assertThat(findMember.getImageUrl()).isEqualTo("www.cdn.com");
+        assertThat(findMember.getSkills())
+                .extracting("skillType").hasSize(2)
                 .containsExactlyInAnyOrder(SkillType.JAVA, SkillType.SPRING);
     }
 
