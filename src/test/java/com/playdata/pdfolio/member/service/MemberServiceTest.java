@@ -127,6 +127,21 @@ class MemberServiceTest {
                 .containsExactlyInAnyOrder(SkillType.JAVA, SkillType.SPRING);
     }
 
+    @DisplayName("회원탈퇴를 한다.")
+    @Test
+    void withdraw(){
+        // given
+        Member member = Member.builder().build();
+        Member savedMember = memberRepository.save(member);
+
+        // when
+        memberService.withdraw(savedMember.getId());
+
+        // then
+        assertThat(savedMember.getStatus()).isEqualTo(MemberStatus.WITHDRAWAL);
+        assertThat(savedMember.isDeleted()).isTrue();
+    }
+
     private void clearContext() {
         entityManager.flush();
         entityManager.clear();

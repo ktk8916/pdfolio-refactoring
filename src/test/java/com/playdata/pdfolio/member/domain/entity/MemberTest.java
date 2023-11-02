@@ -68,4 +68,17 @@ class MemberTest {
                 .containsExactlyInAnyOrder(SkillType.JAVA, SkillType.SPRING);
     }
 
+    @DisplayName("회원탈퇴를 한다.")
+    @Test
+    void withdraw(){
+        // given
+        Member member = Member.builder().build();
+
+        // when
+        member.withdraw();
+
+        // then
+        assertThat(member.getStatus()).isEqualTo(MemberStatus.WITHDRAWAL);
+        assertThat(member.isDeleted()).isTrue();
+    }
 }
