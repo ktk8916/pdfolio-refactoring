@@ -14,8 +14,8 @@ import org.springframework.data.domain.Page;
 
 import java.util.List;
 
-import static com.playdata.pdfolio.domain.entity.project.QProject.*;
-import static com.playdata.pdfolio.domain.entity.project.QProjectSkill.*;
+import static com.playdata.pdfolio.project.domain.entity.QProject.project;
+import static com.playdata.pdfolio.project.domain.entity.QProjectSkill.projectSkill;
 
 @RequiredArgsConstructor
 public class ProjectSearchRepositoryImpl implements ProjectSearchRepository{
@@ -34,7 +34,7 @@ public class ProjectSearchRepositoryImpl implements ProjectSearchRepository{
                         project.thumbNailUrl.url,
                         project.createdAt,
                         Projections.constructor(ProjectSkillResponse.class,
-                                projectSkill.skill
+                                projectSkill.skillType
                         )
                 ))
                 .from(project)
@@ -56,6 +56,6 @@ public class ProjectSearchRepositoryImpl implements ProjectSearchRepository{
             return null;
         }
 
-        return projectSkill.skill.in(skillTypes);
+        return projectSkill.skillType.in(skillTypes);
     }
 }

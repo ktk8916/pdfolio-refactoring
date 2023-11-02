@@ -17,6 +17,6 @@ public class ReplyDto {
         this.memberId = gatherReply.getMember().getId();
         this.nickName = gatherReply.getMember().getNickname();
         this.content = gatherReply.getContent();
-        this.isDeleted = gatherReply.getIsDeleted();
+        this.isDeleted = gatherReply.isDeleted();
     }
 }

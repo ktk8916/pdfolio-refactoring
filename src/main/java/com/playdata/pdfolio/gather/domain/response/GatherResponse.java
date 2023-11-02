@@ -42,7 +42,7 @@ public class GatherResponse {
         this.startDate = gather.getStartDate();
         this.closeDate = gather.getCloseDate();
         this.teamSize = gather.getTeamSize();
-        this.commentCount = gather.getComments().stream().filter(comment->!comment.getIsDeleted()).count();
+        this.commentCount = gather.getComments().stream().filter(comment->!comment.isDeleted()).count();
         this.category = gather.getCategory();
         this.contact = gather.getContact();
         this.heartCount = gather.getHeartCount();

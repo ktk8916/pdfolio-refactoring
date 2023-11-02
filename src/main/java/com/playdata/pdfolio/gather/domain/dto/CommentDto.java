@@ -21,11 +21,11 @@ public class CommentDto {
         this.memberId = gatherComment.getMember().getId();
         this.nickName = gatherComment.getMember().getNickname();
         this.content = gatherComment.getContent();
-        this.isDeleted = gatherComment.getIsDeleted();
+        this.isDeleted = gatherComment.isDeleted();
         this.gatherReplies = gatherComment.getReplies() != null?
                 gatherComment.getReplies()
                         .stream()
-                        .filter(reply ->!reply.getIsDeleted())
+                        .filter(reply ->!reply.isDeleted())
                         .map(ReplyDto::new)
                         .toList()
                 :new ArrayList<>();

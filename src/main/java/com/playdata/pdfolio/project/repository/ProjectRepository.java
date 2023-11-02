@@ -15,21 +15,21 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, Project
     @Query(value = "select distinct p from Project p " +
             "join fetch p.skills ps " +
             "join p.member m " +
-            "where ps.skill in :skillCategory " +
+            "where ps.skillType in :skillCategory " +
             "order by p.createdAt desc")
     Page<Project> searchByConditionOrderByCreatedAt(List<SkillType> skillTypeCategory, Pageable pageable);
 
     @Query(value = "select distinct p from Project p " +
             "join fetch p.skills ps " +
             "join p.member m " +
-            "where ps.skill in :skillCategory " +
+            "where ps.skillType in :skillCategory " +
             "order by p.viewCount desc")
     Page<Project> searchByConditionOrderByViewCount(List<SkillType> skillTypeCategory, Pageable pageable);
 
     @Query(value = "select distinct p from Project p " +
             "join fetch p.skills ps " +
             "join p.member m " +
-            "where ps.skill in :skillCategory " +
+            "where ps.skillType in :skillCategory " +
             "order by p.heartCount desc")
     Page<Project> searchByConditionOrderByHeartCount(List<SkillType> skillTypeCategory, Pageable pageable);
 
