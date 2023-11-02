@@ -3,6 +3,8 @@ package com.playdata.pdfolio.member.domain.entity;
 import com.playdata.pdfolio.global.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +22,17 @@ public class Member extends BaseEntity {
     private String providerId;
     private String imageUrl;
     @OneToMany(mappedBy = "member")
+    @Cascade(CascadeType.ALL)
     private List<MemberSkill> skills = new ArrayList<>();
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
+
+    public void signup(String nickname, String imageUrl, List<MemberSkill> skills){
+        this.nickname = nickname;
+        this.imageUrl = imageUrl;
+        this.skills.addAll(skills);
+        this.status = MemberStatus.MEMBER;
+    }
 
     public void update(String nickname, String imageUrl){
         this.nickname = nickname;

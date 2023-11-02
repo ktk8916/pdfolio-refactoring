@@ -3,6 +3,7 @@ package com.playdata.pdfolio.member.service;
 import com.playdata.pdfolio.global.type.SkillType;
 import com.playdata.pdfolio.member.domain.entity.Member;
 import com.playdata.pdfolio.member.domain.entity.MemberSkill;
+import com.playdata.pdfolio.member.domain.request.SignupRequest;
 import com.playdata.pdfolio.member.domain.request.UpdateRequest;
 import com.playdata.pdfolio.member.exception.MemberNotFoundException;
 import com.playdata.pdfolio.member.repository.MemberRepository;
@@ -21,6 +22,18 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final MemberSkillRepository memberSkillRepository;
+
+    public void signup(Long id, SignupRequest signupRequest) {
+        Member member = Member.fromId(id);
+
+        member.signup(
+                signupRequest.nickname(),
+                signupRequest.imageUrl(),
+                SkillType.convertList(signupRequest.skills()).stream()
+                        .map(MemberSkill::fromSkillType)
+                        .toList()
+        );
+    }
 
     public Member findByIdFetchMemberSkill(Long id){
         return memberRepository
@@ -70,4 +83,6 @@ public class MemberService {
         memberSkillRepository.deleteByMember(member);
         memberRepository.delete(member);
     }
+
+
 }
