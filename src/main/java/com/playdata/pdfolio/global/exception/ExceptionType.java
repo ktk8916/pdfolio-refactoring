@@ -15,7 +15,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public enum ExceptionType {
 
-    NO_MATCHING_SKILL_TYPE(HttpStatus.BAD_REQUEST, "해당 기술 스택은 존재하지 않습니다.", NoSuchSkillException.class),
+    NO_MATCHING_SKILL_TYPE(HttpStatus.BAD_REQUEST, "존재하지 않는 기술입니다..", NoMatchingSkillTypeException.class),
     INVALID_URL_TYPE(HttpStatus.BAD_REQUEST, "유효하지 않는 URL 타입입니다.", InValidUrlTypeException.class),
 
     UNKNOWN_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 서버 에러"),
