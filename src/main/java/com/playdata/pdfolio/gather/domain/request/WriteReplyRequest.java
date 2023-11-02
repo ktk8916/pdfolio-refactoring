@@ -11,7 +11,7 @@ public record WriteReplyRequest(
     public GatherReply toEntity(Long memberId){
 
         return GatherReply.builder()
-                .member(Member.builder().id(memberId).build())
+                .member(Member.fromId(memberId))
                 .comment(GatherComment.builder().id(commentId).build())
                 .content(content)
                 .build();

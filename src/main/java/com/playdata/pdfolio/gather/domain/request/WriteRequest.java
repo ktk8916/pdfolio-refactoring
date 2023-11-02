@@ -22,7 +22,7 @@ public record WriteRequest(
 ) {
     public Gather toEntity(Long memberId){
         return Gather.builder()
-                .member(Member.builder().id(memberId).build())
+                .member(Member.fromId(memberId))
                 .title(title)
                 .content(content)
                 .teamSize(teamSize)

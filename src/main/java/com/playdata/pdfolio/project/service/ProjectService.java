@@ -31,9 +31,7 @@ public class ProjectService {
 
     @Transactional
     public ProjectCreateResponse save(final ProjectCreateRequest request, final Long memberId) {
-        Member member = Member.builder()
-                .id(memberId)
-                .build();
+        Member member = Member.fromId(memberId);
 
         Project project = createProject(request, member);
         List<SkillType> skillTypes = SkillType.of(request.getProjectSkills());

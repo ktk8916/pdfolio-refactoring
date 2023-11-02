@@ -12,7 +12,7 @@ public record WriteCommentRequest(
     public GatherComment toEntity(Long memberId){
 
         return GatherComment.builder()
-                .member(Member.builder().id(memberId).build())
+                .member(Member.fromId(memberId))
                 .gather(Gather.builder().id(gatherId).build())
                 .content(content)
                 .build();
