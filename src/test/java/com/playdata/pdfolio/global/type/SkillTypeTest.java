@@ -35,7 +35,7 @@ class SkillTypeTest {
                 .isInstanceOf(NoMatchingSkillTypeException.class);
     }
 
-    @DisplayName("String list를 SkillType list로 변환한다.")
+    @DisplayName("skill list를 SkillType list로 변환한다.")
     @Test
     void convertList(){
         // given
@@ -45,7 +45,23 @@ class SkillTypeTest {
         List<SkillType> skillTypes = SkillType.convertList(skills);
 
         // then
-        assertThat(skillTypes)
+        assertThat(skillTypes).hasSize(2)
+                .containsExactlyInAnyOrder(
+                        SkillType.JAVA,
+                        SkillType.SPRING);
+    }
+
+    @DisplayName("중복된 스킬이 있을 시 중복을 제거하고 SkillType list로 변환한다.")
+    @Test
+    void convertListIncludesDuplicateSkills(){
+        // given
+        List<String> skills = List.of("java", "java", "spring");
+
+        // when
+        List<SkillType> skillTypes = SkillType.convertList(skills);
+
+        // then
+        assertThat(skillTypes).hasSize(2)
                 .containsExactlyInAnyOrder(
                         SkillType.JAVA,
                         SkillType.SPRING);
