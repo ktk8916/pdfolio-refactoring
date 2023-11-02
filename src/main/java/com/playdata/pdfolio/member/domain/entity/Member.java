@@ -15,7 +15,6 @@ public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
     private String nickname;
     private String provider;
     private String providerId;
@@ -30,16 +29,22 @@ public class Member extends BaseEntity {
         this.imageUrl = imageUrl;
     }
 
+    public static Member fromId(Long id){
+        Member member = new Member();
+        member.id = id;
+        return member;
+    }
+
     public static Member fromOauth2(String provider, String providerId){
         return Member.builder()
                 .provider(provider)
                 .providerId(providerId)
+                .status(MemberStatus.UNAFFILIATED)
                 .build();
     }
 
     @Builder
-    public Member(String name, String nickname, String provider, String providerId, String imageUrl, List<MemberSkill> skills, MemberStatus status) {
-        this.name = name;
+    public Member(String nickname, String provider, String providerId, String imageUrl, List<MemberSkill> skills, MemberStatus status) {
         this.nickname = nickname;
         this.provider = provider;
         this.providerId = providerId;

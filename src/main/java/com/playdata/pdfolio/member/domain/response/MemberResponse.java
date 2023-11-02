@@ -9,9 +9,8 @@ import java.util.stream.Collectors;
 
 public record MemberResponse(
         Long id,
-        String name,
         String providerName,
-        String nickName,
+        String nickname,
         String imageUrl,
         List<String> skills
 ) {
@@ -19,7 +18,6 @@ public record MemberResponse(
     public static MemberResponse from(Member member){
         return new MemberResponse(
                 member.getId(),
-                member.getName(),
                 member.getProvider(),
                 member.getNickname(),
                 member.getImageUrl(),
