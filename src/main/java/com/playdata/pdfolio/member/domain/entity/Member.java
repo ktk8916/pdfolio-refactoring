@@ -34,9 +34,11 @@ public class Member extends BaseEntity {
         this.status = MemberStatus.MEMBER;
     }
 
-    public void update(String nickname, String imageUrl){
+    public void update(String nickname, String imageUrl, List<MemberSkill> skills){
         this.nickname = nickname;
         this.imageUrl = imageUrl;
+        this.skills.clear();
+        this.skills.addAll(skills);
     }
 
     public static Member fromId(Long id){

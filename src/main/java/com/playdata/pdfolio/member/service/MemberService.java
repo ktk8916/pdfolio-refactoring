@@ -35,30 +35,28 @@ public class MemberService {
         );
     }
 
+    public void editProfile(Long id, UpdateRequest updateRequest){
+        Member member = findById(id);
+
+        member.update(
+                updateRequest.nickName(),
+                updateRequest.imageUrl(),
+                SkillType.convertList(updateRequest.skills()).stream()
+                        .map(MemberSkill::fromSkillType)
+                        .toList()
+        );
+    }
+
     public Member findByIdFetchMemberSkill(Long id){
         return memberRepository
                 .findByIdFetchMemberSkill(id)
                 .orElseThrow(MemberNotFoundException::new);
     }
 
-    public Member findById(Long id){
+    private Member findById(Long id){
         return memberRepository
                 .findById(id)
                 .orElseThrow(MemberNotFoundException::new);
-    }
-
-    public void updateBasic(Long id, UpdateRequest updateRequest){
-        Member member = findById(id);
-
-        member.update(
-                updateRequest.nickName(),
-                updateRequest.imageUrl()
-        );
-    }
-
-    public void updateContainSkills(Long id, UpdateRequest updateRequest) {
-        updateBasic(id, updateRequest);
-        changeMemberSkill(id, updateRequest.skills());
     }
 
     private void changeMemberSkill(Long id, List<String> skills){

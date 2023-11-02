@@ -24,6 +24,14 @@ public class MemberController {
         memberService.signup(tokenInfo.getId(), signupRequest);
     }
 
+    @PutMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public void editProfile(
+            @AuthenticationPrincipal TokenInfo tokenInfo,
+            @RequestBody UpdateRequest updateRequest){
+        memberService.editProfile(tokenInfo.getId(), updateRequest);
+    }
+
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
     public void withdraw(@AuthenticationPrincipal TokenInfo tokenInfo){
@@ -36,21 +44,4 @@ public class MemberController {
         Member member = memberService.findByIdFetchMemberSkill(tokenInfo.getMemberId());
         return MemberResponse.from(member);
     }
-    @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void updateBasic(
-            @AuthenticationPrincipal TokenInfo tokenInfo,
-            @RequestBody UpdateRequest updateRequest){
-        memberService.updateBasic(tokenInfo.getMemberId(), updateRequest);
-    }
-
-    @PutMapping("/all")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void updateContainSkills(
-            @AuthenticationPrincipal TokenInfo tokenInfo,
-            @RequestBody UpdateRequest updateRequest)
-    {
-        memberService.updateContainSkills(tokenInfo.getMemberId(), updateRequest);
-    }
-
 }
