@@ -11,7 +11,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByProviderAndProviderId(String provider, String providerId);
     @Query("select m from Member m " +
-            "join fetch m.skills " +
+            "left join fetch m.skills " +
             "where m.id = :id")
-    Optional<Member> findByIdFetchMemberSkill(@Param("id") Long id);
+    Optional<Member> findByIdFetchSkill(@Param("id") Long id);
 }
