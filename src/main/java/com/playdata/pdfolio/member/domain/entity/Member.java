@@ -2,9 +2,10 @@ package com.playdata.pdfolio.member.domain.entity;
 
 import com.playdata.pdfolio.global.BaseEntity;
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +22,7 @@ public class Member extends BaseEntity {
     private String provider;
     private String providerId;
     private String imageUrl;
-    @OneToMany(mappedBy = "member")
-    @Cascade(CascadeType.ALL)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberSkill> skills = new ArrayList<>();
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
