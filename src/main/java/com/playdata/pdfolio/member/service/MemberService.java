@@ -24,7 +24,7 @@ public class MemberService {
     private final MemberSkillRepository memberSkillRepository;
 
     public void signup(Long id, SignupRequest signupRequest) {
-        Member member = Member.fromId(id);
+        Member member = findById(id);
 
         member.signup(
                 signupRequest.nickname(),
