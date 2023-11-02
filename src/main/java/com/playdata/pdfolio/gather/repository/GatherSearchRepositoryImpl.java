@@ -1,10 +1,11 @@
 package com.playdata.pdfolio.gather.repository;
 
 import com.playdata.pdfolio.gather.domain.dto.SearchDto;
-import com.playdata.pdfolio.global.type.SkillType;
-import com.playdata.pdfolio.gather.domain.response.GatherResponse;
 import com.playdata.pdfolio.gather.domain.entity.Gather;
 import com.playdata.pdfolio.gather.domain.entity.GatherCategory;
+import com.playdata.pdfolio.gather.domain.entity.QGatherSkill;
+import com.playdata.pdfolio.gather.domain.response.GatherResponse;
+import com.playdata.pdfolio.global.type.SkillType;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -14,15 +15,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
-
 import java.util.Arrays;
 import java.util.List;
 
-import static com.playdata.pdfolio.domain.entity.gather.QGather.gather;
-import static com.playdata.pdfolio.domain.entity.gather.QGatherSkill.*;
-import static com.playdata.pdfolio.domain.entity.member.QMember.member;
-import static com.playdata.pdfolio.domain.entity.gather.QGatherComment.gatherComment;
-import static com.playdata.pdfolio.domain.entity.gather.QGatherReply.gatherReply;
+import static com.playdata.pdfolio.gather.domain.entity.QGather.gather;
+import static com.playdata.pdfolio.gather.domain.entity.QGatherComment.gatherComment;
+import static com.playdata.pdfolio.gather.domain.entity.QGatherReply.gatherReply;
+import static com.playdata.pdfolio.gather.domain.entity.QGatherSkill.gatherSkill;
+import static com.playdata.pdfolio.member.domain.entity.QMember.member;
+
 
 public class GatherSearchRepositoryImpl implements GatherSearchRepository{
     private final JPAQueryFactory queryFactory;
@@ -111,7 +112,7 @@ public class GatherSearchRepositoryImpl implements GatherSearchRepository{
     private BooleanExpression skillEqual2(String getSkills) {
         return getSkills == null || getSkills.isEmpty()
                 ? null
-                : gatherSkill.skill.in(SkillType.of(Arrays.asList(getSkills.split(","))));
+                : gatherSkill.skillType.in(SkillType.of(Arrays.asList(getSkills.split(","))));
     }
     private BooleanBuilder skillEqualString(String skills) {
         BooleanBuilder builder = new BooleanBuilder();
@@ -119,7 +120,7 @@ public class GatherSearchRepositoryImpl implements GatherSearchRepository{
         if(skills==null || skills.isEmpty() ) return  builder;
         String[] split = skills.split(",");
         for (String c : split) {
-            builder.or(qGatherSkill.skill.in(SkillType.valueOf(c)));
+            builder.or(qGatherSkill.skillType.in(SkillType.valueOf(c)));
         }
         return builder;
     }
