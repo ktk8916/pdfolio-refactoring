@@ -15,7 +15,7 @@ class MemberTest {
     @Test
     void signup(){
         // given
-        Member member = Member.builder().build();
+        Member member = Member.builder().skills(new ArrayList<>()).build();
 
         // when
         member.signup(
