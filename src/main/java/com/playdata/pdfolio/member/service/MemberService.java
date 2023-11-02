@@ -36,7 +36,7 @@ public class MemberService {
     }
 
     public void editProfile(Long id, UpdateRequest updateRequest){
-        Member member = findById(id);
+        Member member = findByIdFetchSkill(id);
 
         member.update(
                 updateRequest.nickName(),
@@ -47,15 +47,15 @@ public class MemberService {
         );
     }
 
-    public Member findByIdFetchMemberSkill(Long id){
+    public Member findByIdFetchSkill(Long id){
         return memberRepository
-                .findByIdFetchMemberSkill(id)
+                .findByIdFetchSkill(id)
                 .orElseThrow(MemberNotFoundException::new);
     }
 
     private Member findById(Long id){
         return memberRepository
-                .findByIdFetchMemberSkill(id)
+                .findById(id)
                 .orElseThrow(MemberNotFoundException::new);
     }
 
