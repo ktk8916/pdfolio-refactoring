@@ -28,6 +28,7 @@ class MemberTest {
         // then
         assertThat(member.getNickname()).isEqualTo("nick");
         assertThat(member.getImageUrl()).isEqualTo("www.cdn.com");
+        assertThat(member.getStatus()).isEqualTo(MemberStatus.MEMBER);
         assertThat(member.getSkills())
                 .extracting("skillType")
                 .containsExactlyInAnyOrder(SkillType.JAVA, SkillType.SPRING);
