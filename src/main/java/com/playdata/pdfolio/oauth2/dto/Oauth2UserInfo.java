@@ -1,4 +1,4 @@
-package com.playdata.pdfolio.oauth2.domain.entity;
+package com.playdata.pdfolio.oauth2.dto;
 
 import com.playdata.pdfolio.oauth2.exception.NotSupportedOauth2Exception;
 import lombok.Getter;

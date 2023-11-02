@@ -1,10 +1,7 @@
-package com.playdata.pdfolio.oauth2.service;
+package com.playdata.pdfolio.oauth2.client;
 
-import com.playdata.pdfolio.member.domain.entity.Member;
-import com.playdata.pdfolio.member.repository.MemberRepository;
-import com.playdata.pdfolio.oauth2.domain.entity.Oauth2TokenDto;
-import com.playdata.pdfolio.oauth2.domain.entity.Oauth2UserInfo;
-import com.playdata.pdfolio.oauth2.domain.response.Oauth2StatusResponse;
+import com.playdata.pdfolio.oauth2.dto.Oauth2AccessToken;
+import com.playdata.pdfolio.oauth2.dto.Oauth2UserInfo;
 import com.playdata.pdfolio.oauth2.provider.Oauth2Provider;
 import com.playdata.pdfolio.oauth2.provider.ProviderFactory;
 import lombok.RequiredArgsConstructor;
@@ -19,32 +16,20 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class Oauth2Service {
+public class Oauth2Client {
 
     private final ProviderFactory providerFactory;
-    private final MemberRepository memberRepository;
 
-    public Oauth2StatusResponse authenticate(String providerName, String code) {
-        Oauth2TokenDto accessToken = getAccessToken(providerName, code);
-        Oauth2UserInfo userInfo = getUserInfo(providerName, accessToken.token());
-
-        Optional<Member> member = memberRepository.findByProviderIdAndProviderName(
-                userInfo.getProviderId(),
-                userInfo.getProviderName()
-        );
-
-        return new Oauth2StatusResponse(
-                member.isEmpty(),
-                providerName,
-                accessToken.token());
+    public Oauth2UserInfo authenticate(String providerName, String code) {
+        Oauth2AccessToken accessToken = getAccessToken(providerName, code);
+        return getUserInfo(providerName, accessToken.token());
     }
 
-    private Oauth2TokenDto getAccessToken(String providerName, String code) {
+    private Oauth2AccessToken getAccessToken(String providerName, String code) {
         Oauth2Provider provider = providerFactory.getProvider(providerName);
         return WebClient.create()
                 .post()
@@ -56,7 +41,7 @@ public class Oauth2Service {
                 })
                 .bodyValue(tokenRequest(code, provider))
                 .retrieve()
-                .bodyToMono(Oauth2TokenDto.class)
+                .bodyToMono(Oauth2AccessToken.class)
                 .block();
     }
 
