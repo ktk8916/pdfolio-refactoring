@@ -6,7 +6,6 @@ import com.playdata.pdfolio.project.domain.request.ProjectSearchParameter;
 import com.playdata.pdfolio.project.domain.response.ProjectCreateResponse;
 import com.playdata.pdfolio.project.domain.response.ProjectDetailResponse;
 import com.playdata.pdfolio.project.domain.response.ProjectListResponse;
-import com.playdata.pdfolio.project.resolver.ProjectSearchParams;
 import com.playdata.pdfolio.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -43,7 +42,7 @@ public class ProjectController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ProjectListResponse> search(@ProjectSearchParams ProjectSearchParameter searchParameter) {
+    public ResponseEntity<ProjectListResponse> search(ProjectSearchParameter searchParameter) {
         ProjectListResponse response = projectService.search(searchParameter);
         return ResponseEntity.ok(response);
     }
