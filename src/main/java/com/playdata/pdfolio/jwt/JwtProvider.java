@@ -4,23 +4,19 @@ import com.playdata.pdfolio.member.domain.entity.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
-@Transactional
 public class JwtProvider {
 
     @Value("${jwt.secret}")
     private String SECRET_KEY;
-    private final long TOKEN_EXPIRATION_TIME = 3 * 24 * 60 * 60 * 1000L; // 일단 3일로 설정
+    private final long TOKEN_EXPIRATION_TIME = 3 * 24 * 60 * 60 * 1000L;
 
     public String generateToken(Member member) {
         Map<String, Object> claims = new HashMap<>();
