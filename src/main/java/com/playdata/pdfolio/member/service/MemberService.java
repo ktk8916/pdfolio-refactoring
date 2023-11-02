@@ -30,7 +30,7 @@ public class MemberService {
                 signupRequest.nickname(),
                 signupRequest.imageUrl(),
                 SkillType.convertList(signupRequest.skills()).stream()
-                        .map(MemberSkill::fromSkillType)
+                        .map(skillType -> MemberSkill.of(member, skillType))
                         .toList()
         );
     }
@@ -42,7 +42,7 @@ public class MemberService {
                 updateRequest.nickName(),
                 updateRequest.imageUrl(),
                 SkillType.convertList(updateRequest.skills()).stream()
-                        .map(MemberSkill::fromSkillType)
+                        .map(skillType -> MemberSkill.of(member, skillType))
                         .toList()
         );
     }
@@ -55,7 +55,7 @@ public class MemberService {
 
     private Member findById(Long id){
         return memberRepository
-                .findById(id)
+                .findByIdFetchMemberSkill(id)
                 .orElseThrow(MemberNotFoundException::new);
     }
 
