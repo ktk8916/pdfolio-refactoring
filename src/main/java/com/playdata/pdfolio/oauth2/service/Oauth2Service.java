@@ -1,18 +1,9 @@
 package com.playdata.pdfolio.oauth2.service;
 
-import com.playdata.pdfolio.global.type.Skill;
 import com.playdata.pdfolio.member.domain.entity.Member;
-import com.playdata.pdfolio.member.domain.entity.MemberSkill;
-import com.playdata.pdfolio.member.exception.UnregisteredMemberException;
 import com.playdata.pdfolio.member.repository.MemberRepository;
-import com.playdata.pdfolio.member.repository.MemberSkillRepository;
-import com.playdata.pdfolio.oauth2.domain.dto.LoginInfoDto;
-import com.playdata.pdfolio.oauth2.domain.dto.TokenDto;
-import com.playdata.pdfolio.oauth2.domain.entity.Oauth2AccessToken;
+import com.playdata.pdfolio.oauth2.domain.entity.Oauth2TokenDto;
 import com.playdata.pdfolio.oauth2.domain.entity.Oauth2UserInfo;
-import com.playdata.pdfolio.oauth2.domain.request.LoginRequest;
-import com.playdata.pdfolio.oauth2.domain.request.SignupRequest;
-import com.playdata.pdfolio.oauth2.domain.response.Oauth2Response;
 import com.playdata.pdfolio.oauth2.domain.response.Oauth2StatusResponse;
 import com.playdata.pdfolio.oauth2.provider.Oauth2Provider;
 import com.playdata.pdfolio.oauth2.provider.ProviderFactory;
@@ -29,8 +20,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,58 +28,9 @@ public class Oauth2Service {
 
     private final ProviderFactory providerFactory;
     private final MemberRepository memberRepository;
-    private final MemberSkillRepository memberSkillRepository;
 
-
-    public Oauth2Response login(String providerName, LoginRequest loginRequest){
-        Oauth2UserInfo userInfo = getUserInfo(providerName, loginRequest.accessToken());
-        Member member = memberRepository
-                .findByProviderIdAndProviderName(
-                        userInfo.getProviderId(),
-                        userInfo.getProviderName())
-                .orElseThrow(UnregisteredMemberException::new);
-
-        TokenDto token = authService.createToken(member);
-        LoginInfoDto loginInfoDto = new LoginInfoDto(
-                member.getId(),
-                providerName,
-                userInfo.getUserName(),
-                member.getNickname());
-        return new Oauth2Response(loginInfoDto, token);
-    }
-
-    public Oauth2Response signup(String providerName, SignupRequest signupRequest) {
-        Oauth2UserInfo userInfo = getUserInfo(providerName, signupRequest.accessToken());
-
-        Member member = memberRepository.save(
-                Member.builder()
-                        .name(userInfo.getUserName())
-                        .nickName(signupRequest.nickName())
-                        .providerId(userInfo.getProviderId())
-                        .providerName(userInfo.getProviderName())
-                        .imageUrl(signupRequest.imageUrl())
-                        .build());
-
-        Set<MemberSkill> memberSkills = Skill.of(signupRequest.skills()).stream()
-                .map(skill -> MemberSkill.builder()
-                        .skill(skill)
-                        .member(member)
-                        .build())
-                .collect(Collectors.toSet());
-
-        memberSkillRepository.saveAll(memberSkills);
-
-        TokenDto token = authService.createToken(member);
-        LoginInfoDto loginInfoDto = new LoginInfoDto(
-                member.getId(),
-                providerName,
-                userInfo.getUserName(),
-                member.getNickname());
-        return new Oauth2Response(loginInfoDto, token);
-    }
-
-    public Oauth2StatusResponse check(String providerName, String code) {
-        Oauth2AccessToken accessToken = getAccessToken(providerName, code);
+    public Oauth2StatusResponse authenticate(String providerName, String code) {
+        Oauth2TokenDto accessToken = getAccessToken(providerName, code);
         Oauth2UserInfo userInfo = getUserInfo(providerName, accessToken.token());
 
         Optional<Member> member = memberRepository.findByProviderIdAndProviderName(
@@ -104,7 +44,7 @@ public class Oauth2Service {
                 accessToken.token());
     }
 
-    private Oauth2AccessToken getAccessToken(String providerName, String code) {
+    private Oauth2TokenDto getAccessToken(String providerName, String code) {
         Oauth2Provider provider = providerFactory.getProvider(providerName);
         return WebClient.create()
                 .post()
@@ -116,7 +56,7 @@ public class Oauth2Service {
                 })
                 .bodyValue(tokenRequest(code, provider))
                 .retrieve()
-                .bodyToMono(Oauth2AccessToken.class)
+                .bodyToMono(Oauth2TokenDto.class)
                 .block();
     }
 
