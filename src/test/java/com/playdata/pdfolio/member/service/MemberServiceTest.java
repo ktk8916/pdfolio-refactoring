@@ -6,6 +6,8 @@ import com.playdata.pdfolio.member.domain.entity.MemberSkill;
 import com.playdata.pdfolio.member.domain.entity.MemberStatus;
 import com.playdata.pdfolio.member.domain.request.SignupRequest;
 import com.playdata.pdfolio.member.domain.request.UpdateRequest;
+import com.playdata.pdfolio.member.domain.response.MemberDetailResponse;
+import com.playdata.pdfolio.member.exception.MemberNotFoundException;
 import com.playdata.pdfolio.member.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
@@ -15,9 +17,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -30,6 +34,48 @@ class MemberServiceTest {
     private MemberRepository memberRepository;
     @Autowired
     private EntityManager entityManager;
+
+    @DisplayName("회원 정보를 조회한다.")
+    @Test
+    void getMyProfile(){
+        // given
+        Member member = Member.builder()
+                .nickname("nick")
+                .provider("github")
+                .imageUrl("www.cdn.com")
+                .skills(new ArrayList<>())
+                .status(MemberStatus.MEMBER)
+                .build();
+
+        Member savedMember = memberRepository.save(member);
+
+        savedMember.getSkills().add(MemberSkill.of(savedMember, SkillType.JAVA));
+
+        clearContext();
+
+        // when
+        MemberDetailResponse response = memberService.getMyProfile(savedMember.getId());
+
+        // then
+        assertThat(response.id()).isEqualTo(savedMember.getId());
+        assertThat(response.provider()).isEqualTo(savedMember.getProvider());
+        assertThat(response.nickname()).isEqualTo(savedMember.getNickname());
+        assertThat(response.imageUrl()).isEqualTo(savedMember.getImageUrl());
+        assertThat(response.status()).isEqualTo(savedMember.getStatus());
+        assertThat(response.skills()).hasSize(1)
+                .containsExactlyInAnyOrder(SkillType.JAVA);
+    }
+
+    @DisplayName("존재하지 않는 회원 조회 시 예외가 발생한다.")
+    @Test
+    void findNotExistMember(){
+        // given
+        Long id = 999999L;
+
+        // when, then
+        assertThatThrownBy(()->memberService.getMyProfile(id))
+                .isInstanceOf(MemberNotFoundException.class);
+    }
 
     @DisplayName("회원가입을 한다.")
     @Test
