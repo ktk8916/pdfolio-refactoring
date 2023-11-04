@@ -1,7 +1,6 @@
 package com.playdata.pdfolio.global;
 
 
-import com.playdata.pdfolio.global.exception.ColumnAlreadyDeletedException;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
@@ -23,10 +22,7 @@ public abstract class BaseEntity {
     private LocalDateTime deletedAt;
     private boolean isDeleted;
 
-    public void deleteColumn(){
-        if(isDeleted){
-            throw new ColumnAlreadyDeletedException();
-        }
+    public void delete(){
         this.deletedAt = LocalDateTime.now();
         this.isDeleted = true;
     }

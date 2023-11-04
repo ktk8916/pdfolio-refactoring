@@ -41,6 +41,11 @@ public class Member extends BaseEntity {
         this.skills.addAll(skills);
     }
 
+    public void withdraw(){
+        delete();
+        this.status = MemberStatus.WITHDRAWAL;
+    }
+
     public static Member fromId(Long id){
         Member member = new Member();
         member.id = id;
