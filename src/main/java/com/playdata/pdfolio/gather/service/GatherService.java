@@ -145,7 +145,7 @@ public class GatherService {
     }
 
     private Gather findGatherById(Long gatherId) {
-        return gatherRepository.findById(gatherId)
+        return gatherRepository.findByIdMemberFetch(gatherId)
                 .orElseThrow(GatherNotFoundException::new);
     }
 

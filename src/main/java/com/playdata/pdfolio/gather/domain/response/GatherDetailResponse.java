@@ -1,66 +1,44 @@
     package com.playdata.pdfolio.gather.domain.response;
 
-    import com.playdata.pdfolio.gather.domain.dto.CommentDto;
-    import com.playdata.pdfolio.gather.domain.dto.GatherSkillDto;
     import com.playdata.pdfolio.gather.domain.entity.Gather;
-    import lombok.AllArgsConstructor;
-    import lombok.Getter;
-    import lombok.NoArgsConstructor;
+    import com.playdata.pdfolio.gather.domain.entity.GatherCategory;
+    import com.playdata.pdfolio.gather.domain.entity.GatherSkill;
+    import com.playdata.pdfolio.global.type.SkillType;
+    import com.playdata.pdfolio.member.domain.dto.MemberDto;
 
     import java.time.LocalDate;
-    import java.util.ArrayList;
     import java.util.List;
 
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Getter
-
-    public class GatherDetailResponse {
-        private Long id;
-        private String title;
-        private String content;
-        private LocalDate startDate;
-        private LocalDate closeDate;
-        private Long teamSize;
-        private String category;
-        private String contact;
-        private Integer heartCount;
-        private Integer viewCount;
-        private Boolean isDeleted;
-
-        private Long memberId;
-        private String memberName;
-        private String memberImageUrl;
-
-        private List<GatherSkillDto> skills;
-
-        private List<CommentDto> gatherCommentList;
-//        private List<ReplyDto> gatherReplies;
-
-        public GatherDetailResponse(Gather gather) {
-            this.id = gather.getId();
-            this.title = gather.getTitle();
-            this.content = gather.getContent();
-            this.startDate = gather.getStartDate();
-            this.closeDate = gather.getCloseDate();
-            this.teamSize = gather.getTeamSize();
-            this.category = gather.getCategory().name();
-            this.contact = gather.getContact();
-            this.heartCount = gather.getHeartCount();
-            this.viewCount = gather.getViewCount();
-            this.memberId = gather.getMember().getId();
-            this.memberName = gather.getMember().getNickname();
-            this.memberImageUrl = gather.getMember().getImageUrl();
-            this.skills = gather.getSkills().stream().map(GatherSkillDto::new).toList();
-
-            this.gatherCommentList = gather.getComments() != null?
-                    gather.getComments()
-                            .stream()
-                            .map(CommentDto::new)
+    public record GatherDetailResponse(
+            Long id,
+            String title,
+            String content,
+            LocalDate startDate,
+            LocalDate closeDate,
+            int teamSize,
+            GatherCategory category,
+            String contact,
+            int likeCount,
+            int viewCount,
+            MemberDto member,
+            List<SkillType> skills
+    ) {
+        public static GatherDetailResponse fromEntity(Gather gather){
+            return new GatherDetailResponse(
+                    gather.getId(),
+                    gather.getTitle(),
+                    gather.getContent(),
+                    gather.getStartDate(),
+                    gather.getCloseDate(),
+                    gather.getTeamSize(),
+                    gather.getCategory(),
+                    gather.getContact(),
+                    gather.getLikeCount(),
+                    gather.getViewCount(),
+                    MemberDto.fromEntity(gather.getMember()),
+                    gather.getSkills().stream()
+                            .map(GatherSkill::getSkillType)
                             .toList()
-                    :new ArrayList<>();
-
+            );
         }
-
-
     }
