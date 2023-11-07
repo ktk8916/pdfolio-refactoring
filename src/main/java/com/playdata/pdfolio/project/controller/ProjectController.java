@@ -9,13 +9,10 @@ import com.playdata.pdfolio.project.domain.response.ProjectListResponse;
 import com.playdata.pdfolio.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@Validated
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/project")
 public class ProjectController {
@@ -23,27 +20,21 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @PostMapping
-    public ResponseEntity<ProjectCreateResponse> save(
-            @RequestBody ProjectCreateRequest projectCreateRequest,
-            @AuthenticationPrincipal TokenInfo tokenInfo) {
-        ProjectCreateResponse response = projectService.save(
-                projectCreateRequest,
-                tokenInfo.getMemberId());
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProjectCreateResponse save(
+            @AuthenticationPrincipal TokenInfo tokenInfo,
+            @RequestBody ProjectCreateRequest projectCreateRequest
+    ) {
+        return projectService.save(projectCreateRequest, tokenInfo.getId());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProjectDetailResponse> findById(@PathVariable Long id) {
-        ProjectDetailResponse response = projectService.findById(id);
-        return ResponseEntity.ok(response);
+    public ProjectDetailResponse findById(@PathVariable Long id) {
+        return projectService.findById(id);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ProjectListResponse> search(ProjectSearchParameter searchParameter) {
-        ProjectListResponse response = projectService.search(searchParameter);
-        return ResponseEntity.ok(response);
+    public ProjectListResponse search(ProjectSearchParameter searchParameter) {
+        return projectService.search(searchParameter);
     }
 }
