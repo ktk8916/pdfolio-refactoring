@@ -9,7 +9,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
+import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -17,10 +17,12 @@ import java.util.List;
 import static com.playdata.pdfolio.project.domain.entity.QProject.project;
 import static com.playdata.pdfolio.project.domain.entity.QProjectSkill.projectSkill;
 
-@RequiredArgsConstructor
 public class ProjectSearchRepositoryImpl implements ProjectSearchRepository{
 
     private final JPAQueryFactory queryFactory;
+    public ProjectSearchRepositoryImpl(EntityManager entityManager){
+        this.queryFactory = new JPAQueryFactory(entityManager);
+    }
 
     @Override
     public Page<ProjectResponse> findByCondition(ProjectSearchParameter searchParameter) {
