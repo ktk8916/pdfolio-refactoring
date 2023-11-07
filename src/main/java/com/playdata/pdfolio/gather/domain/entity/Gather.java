@@ -30,8 +30,8 @@ public class Gather extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private GatherCategory category;
     private String contact;
-    private Integer heartCount;
-    private Integer viewCount;
+    private int likeCount;
+    private int viewCount;
     @ManyToOne
     private Member member;
     @OneToMany(mappedBy = "gather", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -65,7 +65,7 @@ public class Gather extends BaseEntity {
     }
 
     @Builder
-    public Gather(String title, String content, LocalDate startDate, LocalDate closeDate, int teamSize, GatherCategory category, String contact, Integer heartCount, Integer viewCount, Member member, List<GatherSkill> skills, List<GatherComment> comments) {
+    public Gather(String title, String content, LocalDate startDate, LocalDate closeDate, int teamSize, GatherCategory category, String contact, int likeCount, int viewCount, Member member, List<GatherSkill> skills, List<GatherComment> comments) {
         this.title = title;
         this.content = content;
         this.startDate = startDate;
@@ -73,7 +73,7 @@ public class Gather extends BaseEntity {
         this.teamSize = teamSize;
         this.category = category;
         this.contact = contact;
-        this.heartCount = heartCount;
+        this.likeCount = likeCount;
         this.viewCount = viewCount;
         this.member = member;
         this.skills = skills;
@@ -85,10 +85,10 @@ public class Gather extends BaseEntity {
     }
 
     public void increaseHeartCount() {
-        this.heartCount++;
+        this.likeCount++;
     }
 
     public void decreaseHeartCount() {
-        this.heartCount--;
+        this.likeCount--;
     }
 }
