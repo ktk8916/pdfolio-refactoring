@@ -9,10 +9,9 @@ public record WriteReplyRequest(
         String content
 ) {
     public GatherReply toEntity(Long memberId){
-
         return GatherReply.builder()
                 .member(Member.fromId(memberId))
-                .comment(GatherComment.builder().id(commentId).build())
+                .comment(GatherComment.fromId(commentId))
                 .content(content)
                 .build();
     }

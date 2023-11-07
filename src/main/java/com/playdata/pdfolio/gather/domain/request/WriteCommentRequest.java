@@ -7,13 +7,11 @@ import com.playdata.pdfolio.member.domain.entity.Member;
 public record WriteCommentRequest(
         Long gatherId,
         String content
-        ) {
-
+) {
     public GatherComment toEntity(Long memberId){
-
         return GatherComment.builder()
                 .member(Member.fromId(memberId))
-                .gather(Gather.builder().id(gatherId).build())
+                .gather(Gather.formId(gatherId))
                 .content(content)
                 .build();
     }

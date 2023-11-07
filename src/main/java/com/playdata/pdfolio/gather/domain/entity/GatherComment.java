@@ -8,20 +8,31 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
 @Getter
-@Setter
 public class GatherComment extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String content;
     @ManyToOne
     private Gather gather;
     @ManyToOne
     private Member member;
+    private String content;
     @OneToMany(mappedBy = "comment")
     private List<GatherReply> replies;
+
+    public static GatherComment fromId(Long id){
+        GatherComment gatherComment = new GatherComment();
+        gatherComment.id = id;
+        return gatherComment;
+    }
+
+    @Builder
+    public GatherComment(Gather gather, Member member, String content, List<GatherReply> replies) {
+        this.gather = gather;
+        this.member = member;
+        this.content = content;
+        this.replies = replies;
+    }
 }
