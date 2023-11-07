@@ -39,9 +39,8 @@ class GatherServiceTest {
     @Test
     void writeGather(){
         // given
-        Member member = Member.builder().nickname("철수").build();
-        Member savedMember = memberRepository.save(member);
-        Long memberId = savedMember.getId();
+        Member member = createTestMember();
+        Long memberId = member.getId();
 
         LocalDate startDate = LocalDate.of(2023, 10, 5);
         LocalDate closeDate = LocalDate.of(2023, 11, 5);
@@ -78,9 +77,8 @@ class GatherServiceTest {
     @Test
     void writeGatherInvalidDuration(){
         // given
-        Member member = Member.builder().nickname("철수").build();
-        Member savedMember = memberRepository.save(member);
-        Long memberId = savedMember.getId();
+        Member member = createTestMember();
+        Long memberId = member.getId();
 
         LocalDate startDate = LocalDate.of(2023, 11, 5);
         LocalDate closeDate = LocalDate.of(2023, 10, 5);
@@ -105,25 +103,9 @@ class GatherServiceTest {
     @Test
     void editGather(){
         // given
-        Member member = Member.builder().nickname("철수").build();
-        Member savedMember = memberRepository.save(member);
-        Long memberId = savedMember.getId();
-
-        LocalDate startDate = LocalDate.of(2023, 10, 5);
-        LocalDate closeDate = LocalDate.of(2023, 11, 5);
-
-        GatherWriteRequest gatherWriteRequest = new GatherWriteRequest(
-                "제목입니다.",
-                "내용입니다.",
-                startDate,
-                closeDate,
-                5,
-                GatherCategory.PROJECT,
-                "aaa@aaa.com",
-                List.of("java", "spring")
-        );
-
-        gatherService.writeGather(memberId, gatherWriteRequest);
+        Member member = createTestMember();
+        Long memberId = member.getId();
+        Gather gather = createTestGather(memberId);
 
         LocalDate editStartDate = LocalDate.of(2024, 10, 5);
         LocalDate editCloseDate = LocalDate.of(2024, 11, 5);
@@ -139,48 +121,30 @@ class GatherServiceTest {
                 List.of("php", "mysql", "git")
         );
 
-        Gather gather = gatherRepository.findAll().get(0);
+        Gather editedgather = gatherRepository.findAll().get(0);
 
         // when
-        gatherService.editGather(gather.getId(), memberId, gatherEditRequest);
+        gatherService.editGather(editedgather.getId(), memberId, gatherEditRequest);
 
         // then
-        assertThat(gather.getTitle()).isEqualTo("수정 제목입니다.");
-        assertThat(gather.getContent()).isEqualTo("수정 내용입니다.");
-        assertThat(gather.getStartDate()).isEqualTo(editStartDate);
-        assertThat(gather.getCloseDate()).isEqualTo(editCloseDate);
-        assertThat(gather.getTeamSize()).isEqualTo(7);
-        assertThat(gather.getCategory()).isEqualTo(GatherCategory.STUDY);
-        assertThat(gather.getContact()).isEqualTo("bbb@bbb.com");
-        assertThat(gather.getSkills()).extracting("skillType").hasSize(3)
+        assertThat(editedgather.getTitle()).isEqualTo("수정 제목입니다.");
+        assertThat(editedgather.getContent()).isEqualTo("수정 내용입니다.");
+        assertThat(editedgather.getStartDate()).isEqualTo(editStartDate);
+        assertThat(editedgather.getCloseDate()).isEqualTo(editCloseDate);
+        assertThat(editedgather.getTeamSize()).isEqualTo(7);
+        assertThat(editedgather.getCategory()).isEqualTo(GatherCategory.STUDY);
+        assertThat(editedgather.getContact()).isEqualTo("bbb@bbb.com");
+        assertThat(editedgather.getSkills()).extracting("skillType").hasSize(3)
                 .containsExactlyInAnyOrder(SkillType.PHP, SkillType.MYSQL, SkillType.GIT);
     }
 
     @DisplayName("모집글 수정 시, 글 작성자가 아니면 예외가 발생한다.")
     @Test
-    void editGatherInvalidWriter(){
+    void editGatherInvalidMember(){
         // given
-        Member member = Member.builder().nickname("철수").build();
-        Member savedMember = memberRepository.save(member);
-        Long memberId = savedMember.getId();
-
-        LocalDate startDate = LocalDate.of(2023, 10, 5);
-        LocalDate closeDate = LocalDate.of(2023, 11, 5);
-
-        GatherWriteRequest gatherWriteRequest = new GatherWriteRequest(
-                "제목입니다.",
-                "내용입니다.",
-                startDate,
-                closeDate,
-                5,
-                GatherCategory.PROJECT,
-                "aaa@aaa.com",
-                List.of("java", "spring")
-        );
-
-        gatherService.writeGather(memberId, gatherWriteRequest);
-
-        Gather gather = gatherRepository.findAll().get(0);
+        Member member = createTestMember();
+        Long memberId = member.getId();
+        Gather gather = createTestGather(memberId);
 
         LocalDate editStartDate = LocalDate.of(2024, 10, 5);
         LocalDate editCloseDate = LocalDate.of(2024, 11, 5);
@@ -207,27 +171,9 @@ class GatherServiceTest {
     @Test
     void editGatherInvalidDuration(){
         // given
-        Member member = Member.builder().nickname("철수").build();
-        Member savedMember = memberRepository.save(member);
-        Long memberId = savedMember.getId();
-
-        LocalDate startDate = LocalDate.of(2023, 10, 5);
-        LocalDate closeDate = LocalDate.of(2023, 11, 5);
-
-        GatherWriteRequest gatherWriteRequest = new GatherWriteRequest(
-                "제목입니다.",
-                "내용입니다.",
-                startDate,
-                closeDate,
-                5,
-                GatherCategory.PROJECT,
-                "aaa@aaa.com",
-                List.of("java", "spring")
-        );
-
-        gatherService.writeGather(memberId, gatherWriteRequest);
-
-        Gather gather = gatherRepository.findAll().get(0);
+        Member member = createTestMember();
+        Long memberId = member.getId();
+        Gather gather = createTestGather(memberId);
 
         LocalDate editStartDate = LocalDate.of(2024, 10, 5);
         LocalDate editCloseDate = LocalDate.of(2023, 11, 5);
@@ -246,5 +192,58 @@ class GatherServiceTest {
         // when, then
         assertThatThrownBy(()->gatherService.editGather(gather.getId(), memberId, gatherEditRequest))
                 .isInstanceOf(InvalidGatherDurationException.class);
+    }
+
+    @DisplayName("모집글을 삭제한다.")
+    @Test
+    void deleteGather(){
+        // given
+        Member member = createTestMember();
+        Long memberId = member.getId();
+        Gather gather = createTestGather(memberId);
+
+        // when
+        gatherService.deleteGather(gather.getId(), memberId);
+
+        // then
+        assertThat(gather.isDeleted()).isTrue();
+    }
+
+    @DisplayName("모집글 삭제 시 글 작성자가 아니면 예외가 발생한다.")
+    @Test
+    void deleteGatherInvalidMember(){
+        // given
+        Member member = createTestMember();
+        Long memberId = member.getId();
+        Gather gather = createTestGather(memberId);
+        Long invalidMemberId = 99999999L;
+
+        // when, then
+        assertThatThrownBy(()->gatherService.deleteGather(gather.getId(), invalidMemberId))
+                .isInstanceOf(InvalidGatherWriterException.class);
+    }
+
+    private Member createTestMember() {
+        Member member = Member.builder().nickname("철수").build();
+        return memberRepository.save(member);
+    }
+
+    private Gather createTestGather(Long memberId) {
+        LocalDate startDate = LocalDate.of(2023, 10, 5);
+        LocalDate closeDate = LocalDate.of(2023, 11, 5);
+
+        GatherWriteRequest gatherWriteRequest = new GatherWriteRequest(
+                "제목입니다.",
+                "내용입니다.",
+                startDate,
+                closeDate,
+                5,
+                GatherCategory.PROJECT,
+                "aaa@aaa.com",
+                List.of("java", "spring")
+        );
+
+        gatherService.writeGather(memberId, gatherWriteRequest);
+        return gatherRepository.findAll().get(0);
     }
 }
