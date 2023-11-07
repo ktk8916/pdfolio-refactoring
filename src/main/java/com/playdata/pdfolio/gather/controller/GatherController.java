@@ -1,11 +1,12 @@
 package com.playdata.pdfolio.gather.controller;
 
 
+import com.playdata.pdfolio.gather.domain.request.GatherEditRequest;
 import com.playdata.pdfolio.jwt.TokenInfo;
 import com.playdata.pdfolio.gather.domain.dto.SearchDto;
 import com.playdata.pdfolio.gather.domain.request.WriteCommentRequest;
 import com.playdata.pdfolio.gather.domain.request.WriteReplyRequest;
-import com.playdata.pdfolio.gather.domain.request.WriteRequest;
+import com.playdata.pdfolio.gather.domain.request.GatherWriteRequest;
 import com.playdata.pdfolio.gather.domain.response.GatherDetailResponse;
 import com.playdata.pdfolio.gather.domain.response.GatherResponse;
 import com.playdata.pdfolio.gather.service.GatherService;
@@ -20,24 +21,26 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/gather")
 public class GatherController {
+
     private final GatherService gatherService;
 
-    // 모집글 작성
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void GatherWrite(
+    public void writeGather(
             @AuthenticationPrincipal TokenInfo tokenInfo,
-            @RequestBody WriteRequest writeRequest){
-        gatherService.writeGather(writeRequest, tokenInfo.getMemberId());
+            @RequestBody GatherWriteRequest gatherWriteRequest
+    ){
+        gatherService.writeGather(tokenInfo.getId(), gatherWriteRequest);
     }
-    // 모집글 수정
+
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public void GatherModify(@PathVariable(name = "id") Long id,
-                             @AuthenticationPrincipal TokenInfo tokenInfo,
-                             @RequestBody WriteRequest writeRequest)
+    public void editGather(
+            @PathVariable(name = "id") Long id,
+            @AuthenticationPrincipal TokenInfo tokenInfo,
+            @RequestBody GatherEditRequest gatherEditRequest)
     {
-        gatherService.modifyGather(writeRequest, id, tokenInfo.getMemberId());
+        gatherService.editGather(id, tokenInfo.getId(), gatherEditRequest);
     }
     // 모집글 삭제
     @DeleteMapping("/{id}")
