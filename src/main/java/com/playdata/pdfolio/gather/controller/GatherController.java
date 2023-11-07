@@ -34,26 +34,27 @@ public class GatherController {
     }
 
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void editGather(
-            @PathVariable(name = "id") Long id,
+            @PathVariable("id") Long id,
             @AuthenticationPrincipal TokenInfo tokenInfo,
             @RequestBody GatherEditRequest gatherEditRequest)
     {
         gatherService.editGather(id, tokenInfo.getId(), gatherEditRequest);
     }
-    // 모집글 삭제
+
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void GatherDelete(@PathVariable(name = "id") Long id){
-        gatherService.deleteGather(id);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteGather(
+            @PathVariable("id") Long id,
+            @AuthenticationPrincipal TokenInfo tokenInfo
+    ){
+        gatherService.deleteGather(id, tokenInfo.getId());
     }
 
-    // 모집글 상세 보기
-    @GetMapping("/detail/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public GatherDetailResponse detailGather(@PathVariable(name = "id") Long id){
-       return gatherService.detailGather(id);
+    @GetMapping("/{id}")
+    public GatherDetailResponse getGatherById(@PathVariable("id") Long id){
+       return gatherService.getGatherById(id);
     }
 
     // 모집글 전체 보기 / 모집글 제목 , 글 내용 , 카테고리 , 스킬 검색
