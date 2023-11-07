@@ -6,18 +6,22 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
 @Getter
-@Setter
 public class GatherReply extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String content;
     @ManyToOne
     private Member member;
+    private String content;
     @ManyToOne
     private GatherComment comment;
+
+    @Builder
+    public GatherReply(Member member, String content, GatherComment comment) {
+        this.member = member;
+        this.content = content;
+        this.comment = comment;
+    }
 }
