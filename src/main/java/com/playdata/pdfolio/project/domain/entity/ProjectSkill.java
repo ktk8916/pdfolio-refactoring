@@ -24,7 +24,7 @@ public class ProjectSkill {
     private SkillType skillType;
 
     public String getSkillName() {
-        return this.skillType.getName();
+        return this.skillType.getText();
     }
 
 }

@@ -16,6 +16,6 @@ public class GatherSkillDto{
 
     public GatherSkillDto(GatherSkill gatherSkill) {
         this.id = gatherSkill.getId();
-        this.skill = gatherSkill.getSkillName();
+        this.skill = gatherSkill.getSkillType().getText();
     }
 }

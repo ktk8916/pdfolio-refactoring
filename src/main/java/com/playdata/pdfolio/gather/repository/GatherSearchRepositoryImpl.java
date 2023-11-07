@@ -112,7 +112,7 @@ public class GatherSearchRepositoryImpl implements GatherSearchRepository{
     private BooleanExpression skillEqual2(String getSkills) {
         return getSkills == null || getSkills.isEmpty()
                 ? null
-                : gatherSkill.skillType.in(SkillType.of(Arrays.asList(getSkills.split(","))));
+                : gatherSkill.skillType.in(SkillType.convertList(Arrays.asList(getSkills.split(","))));
     }
     private BooleanBuilder skillEqualString(String skills) {
         BooleanBuilder builder = new BooleanBuilder();

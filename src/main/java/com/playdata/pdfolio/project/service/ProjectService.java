@@ -34,7 +34,7 @@ public class ProjectService {
         Member member = Member.fromId(memberId);
 
         Project project = createProject(request, member);
-        List<SkillType> skillTypes = SkillType.of(request.getProjectSkills());
+        List<SkillType> skillTypes = SkillType.convertList(request.getProjectSkills());
 
         Project savedProject = projectRepository.save(project);
 

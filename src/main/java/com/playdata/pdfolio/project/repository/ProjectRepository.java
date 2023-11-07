@@ -12,24 +12,24 @@ import java.util.List;
 public interface ProjectRepository extends JpaRepository<Project, Long>, ProjectSearchRepository {
 
     // TODO: 나중에 동적 쿼리 적용
-    @Query(value = "select distinct p from Project p " +
+    @Query("select distinct p from Project p " +
             "join fetch p.skills ps " +
             "join p.member m " +
-            "where ps.skillType in :skillCategory " +
+            "where ps.skillType in :skillTypeCategory " +
             "order by p.createdAt desc")
     Page<Project> searchByConditionOrderByCreatedAt(List<SkillType> skillTypeCategory, Pageable pageable);
 
-    @Query(value = "select distinct p from Project p " +
+    @Query("select distinct p from Project p " +
             "join fetch p.skills ps " +
             "join p.member m " +
-            "where ps.skillType in :skillCategory " +
+            "where ps.skillType in :skillTypeCategory " +
             "order by p.viewCount desc")
     Page<Project> searchByConditionOrderByViewCount(List<SkillType> skillTypeCategory, Pageable pageable);
 
-    @Query(value = "select distinct p from Project p " +
+    @Query("select distinct p from Project p " +
             "join fetch p.skills ps " +
             "join p.member m " +
-            "where ps.skillType in :skillCategory " +
+            "where ps.skillType in :skillTypeCategory " +
             "order by p.heartCount desc")
     Page<Project> searchByConditionOrderByHeartCount(List<SkillType> skillTypeCategory, Pageable pageable);
 

@@ -5,9 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
 @Getter
 public class GatherSkill {
 
@@ -16,15 +14,21 @@ public class GatherSkill {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "gather_id", nullable = false)
     private Gather gather;
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private SkillType skillType;
 
-    public String getSkillName() {
-        return this.skillType.getName();
+    public static GatherSkill of(Gather gather, SkillType skillType){
+        return GatherSkill.builder()
+                .gather(gather)
+                .skillType(skillType)
+                .build();
     }
 
+    @Builder
+    public GatherSkill(Gather gather, SkillType skillType) {
+        this.gather = gather;
+        this.skillType = skillType;
+    }
 }

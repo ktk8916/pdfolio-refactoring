@@ -16,7 +16,7 @@ public class ProjectSkillResponse {
     private String skillName;
 
     public ProjectSkillResponse(SkillType skillType) {
-        this.skillName = skillType.getName();
+        this.skillName = skillType.getText();
     }
 
     public static ProjectSkillResponse of(ProjectSkill projectSkill) {
