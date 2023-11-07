@@ -18,7 +18,6 @@ import com.playdata.pdfolio.gather.domain.response.GatherResponse;
 import com.playdata.pdfolio.gather.repository.GatherCommentRepository;
 import com.playdata.pdfolio.gather.repository.GatherReplyRepository;
 import com.playdata.pdfolio.gather.repository.GatherRepository;
-import com.playdata.pdfolio.gather.repository.GatherSkillRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -51,7 +50,7 @@ public class GatherService {
 
     @Transactional
     public void editGather(Long gatherId, Long memberId, GatherEditRequest gatherEditRequest){
-        Gather gather = findById(gatherId);
+        Gather gather = findGatherById(gatherId);
 
         if(!isValidGatherWriter(gather, memberId)){
             throw new InvalidGatherWriterException();
@@ -73,26 +72,22 @@ public class GatherService {
         );
     }
 
+    @Transactional
+    public void deleteGather(Long gatherId, Long memberId){
+        Gather gather = findGatherById(gatherId);
 
-    // 모집글 삭제
-    public void deleteGather(Long id){
-        Gather byId = gatherRepository.findById(id)
-                .orElseThrow(NoSuchElementException::new);
-        byId.delete();  // deleteColumn으로 실제 삭제가 아닌 is_deleted 칼럼 boolean을 변경
+        if(!isValidGatherWriter(gather, memberId)){
+            throw new InvalidGatherWriterException();
+        }
 
-        // gatherRepository.deleteById(id);
+        gather.delete();
     }
 
-    // 모집글 상세 보기
-    public GatherDetailResponse detailGather(Long id){
-        Optional<Gather> byId = gatherRepository.findByGather(id);
-        Gather gather = byId.orElseThrow(() ->
-                new RuntimeException("Not Found Gather" + id));
+    @Transactional
+    public GatherDetailResponse getGatherById(Long gatherId){
+        Gather gather = findGatherById(gatherId);
         gather.increaseViewCount();
-        return new GatherDetailResponse(gather);
-
-//        Gather gather = gatherRepository.findByIdIncludingUndeletedComments(id);
-//        return new GatherDetailResponse(gather);
+        return GatherDetailResponse.fromEntity(gather);
     }
 
     // 모집글 전체 보기 / 모집글 제목 , 글 내용 , 카테고리 검색
@@ -100,8 +95,6 @@ public class GatherService {
         Page<GatherResponse> all = gatherRepository.findAllByCondition(request,searchDto);
         return all;
     }
-
-
 
 // -----------------------------------------------------------------------------
     // 코멘트 작성
@@ -151,7 +144,7 @@ public class GatherService {
         gatherReply.delete();
     }
 
-    private Gather findById(Long gatherId) {
+    private Gather findGatherById(Long gatherId) {
         return gatherRepository.findById(gatherId)
                 .orElseThrow(GatherNotFoundException::new);
     }
