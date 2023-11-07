@@ -21,11 +21,11 @@ public class GatherResponse {
     private String content;
     private LocalDate startDate;
     private LocalDate closeDate;
-    private Long teamSize;
+    private int teamSize;
     private GatherCategory category;
     private String contact;
-    private Integer heartCount;
-    private Integer viewCount;
+    private int heartCount;
+    private int viewCount;
     private Boolean isDeleted;
 
     private Long memberId;
@@ -45,7 +45,7 @@ public class GatherResponse {
         this.commentCount = gather.getComments().stream().filter(comment->!comment.isDeleted()).count();
         this.category = gather.getCategory();
         this.contact = gather.getContact();
-        this.heartCount = gather.getHeartCount();
+        this.heartCount = gather.getLikeCount();
         this.viewCount = gather.getViewCount();
         this.memberId = gather.getMember().getId();
         this.memberName = gather.getMember().getNickname();
