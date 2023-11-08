@@ -2,7 +2,7 @@
 
 ## 서비스
 
-### Playdata 부트캠프 수강생들끼리 만든 미니 프로젝트를 공유하고,
+### Playdata 수강생들끼리 만든 미니 프로젝트를 공유하고,
 
 ### 사이드 프로젝트 및 스터디를 구인하는 사이트
 
@@ -22,14 +22,6 @@
 
 - Javascript(es6)
 - React, Bootstrap
-
----
-
-## 구성원
-
-총 4명
-
-프론트, 백 구분 없이 기능을 맡고, 맡은 부분에 대한 프론트를 구현
 
 ---
 
@@ -67,9 +59,87 @@
 
 ---
 
-## 테스트 코드 및 리팩토링 진행중..
+## 리팩토링
 
-테스트 커버리지 기존 21% -> 43%
+### 1. MySql %like% 개선
+ - 진행중..
+
+### 1. 테스트 코드 작성
+
+ - 로직에 대한 테스트 코드 N개 작성
+ - Jacoco 테스트 커버리지 기존 21% -> 43%
+ - 진행중..
+   
+### 2. 의존성 분리
+
+기존 코드에선 `oauth2` 서버에 유저 정보를 가져오는 Oauth2Service의 `getUserInfo` 메서드와,  
+`내 서비스`의 회원인지를 판별하는 코드가 같은 곳에서 사용되어 책임이 불분명하고 테스트가 어려웠음
+```java
+public class Oauth2Service {
+
+    private final ProviderFactory providerFactory;
+    private final AuthService authService;
+    private final MemberRepository memberRepository;
+    private final MemberSkillRepository memberSkillRepository;
+
+    public Oauth2Response login(String providerName, LoginRequest loginRequest){
+        Oauth2UserInfo userInfo = getUserInfo(providerName, loginRequest.accessToken());
+        Member member = memberRepository
+                .findByProviderIdAndProviderName(
+                        userInfo.getProviderId(),
+                        userInfo.getProviderName())
+                .orElseThrow(UnregisteredMemberException::new);
+
+        TokenDto token = authService.createToken(member);
+        LoginInfoDto loginInfoDto = new LoginInfoDto(
+                member.getId(),
+                providerName,
+                userInfo.getUserName(),
+                member.getNickName());
+        return new Oauth2Response(loginInfoDto, token);
+    }
+```
+
+이를 `oauth2` 서버에 유저 정보를 가져오는 `Oauth2Client`와  
+회원을 확인하는 `AuthService`로 나누어 책임을 분리하였음
+
+```java
+public class Oauth2Client {
+
+    private final ProviderFactory providerFactory;
+
+    public Oauth2UserInfo authenticate(String provider, String code) {
+        Oauth2AccessToken accessToken = getAccessToken(provider, code);
+        return getUserInfo(provider, accessToken.token());
+    }
+}
+
+//-----------------------------------------------------------------------------------------------------------
+
+public class AuthService {
+
+    private final MemberRepository memberRepository;
+    private final Oauth2Client oauth2Client;
+    private final JwtProvider jwtProvider;
+
+    public AuthResponse authenticate(String provider, String code) {
+        Oauth2UserInfo oauth2UserInfo = oauth2Client.authenticate(provider, code);
+
+        Member member = memberRepository
+                .findByProviderAndProviderId(oauth2UserInfo.getProvider(), oauth2UserInfo.getProviderId())
+                .orElseGet(() -> memberRepository.save(
+                        Member.fromOauth2(
+                                oauth2UserInfo.getProvider(),
+                                oauth2UserInfo.getProviderId())));
+
+        String token = jwtProvider.generateToken(member);
+
+        return AuthResponse.of(getRedirect(member), token);
+    }
+}
+```
+결과적으로 각 메서드의 역할이 분명해졌고,  
+`Oauth2Client mocking`으로 인해 테스트가 용이해짐
 
 ## 시연
 
