@@ -26,3 +26,5 @@ oauth2:
       user-info-uri: 11111
 jwt:
   secret: 테스트를하기위해서사용하는의미없는문자열인데쓸게없네이정도면됐지않을까
+cors:
+  allow-origin: http://localhost:3000
