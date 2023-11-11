@@ -4,14 +4,13 @@ import com.playdata.pdfolio.gather.domain.entity.GatherComment;
 import com.playdata.pdfolio.gather.domain.entity.GatherReply;
 import com.playdata.pdfolio.member.domain.entity.Member;
 
-public record WriteReplyRequest(
-        Long commentId,
+public record GatherReplyWriteRequest(
         String content
 ) {
-    public GatherReply toEntity(Long memberId){
+    public GatherReply toEntity(Long commentId, Long memberId){
         return GatherReply.builder()
-                .member(Member.fromId(memberId))
                 .comment(GatherComment.fromId(commentId))
+                .member(Member.fromId(memberId))
                 .content(content)
                 .build();
     }

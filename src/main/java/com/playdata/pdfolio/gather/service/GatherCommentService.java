@@ -1,8 +1,10 @@
 package com.playdata.pdfolio.gather.service;
 
 import com.playdata.pdfolio.gather.domain.entity.GatherComment;
+import com.playdata.pdfolio.gather.domain.entity.GatherReply;
 import com.playdata.pdfolio.gather.domain.request.GatherCommentEditRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherCommentWriteRequest;
+import com.playdata.pdfolio.gather.domain.request.GatherReplyWriteRequest;
 import com.playdata.pdfolio.gather.exception.DeletedGatherCommentException;
 import com.playdata.pdfolio.gather.exception.GatherCommentNotFoundException;
 import com.playdata.pdfolio.gather.exception.InvalidGatherCommentWriterException;
@@ -43,6 +45,25 @@ public class GatherCommentService {
         }
 
         gatherComment.delete();
+    }
+
+    @Transactional
+    public void writeGatherReply(Long commentId, Long memberId, GatherReplyWriteRequest request) {
+        findGatherCommentById(commentId);
+
+        GatherReply gatherReply = request.toEntity(commentId, memberId);
+        gatherReplyRepository.save(gatherReply);
+    }
+
+    private GatherComment findGatherReplyById(Long commentId) {
+        GatherComment gatherComment = gatherCommentRepository.findById(commentId)
+                .orElseThrow(GatherCommentNotFoundException::new);
+
+        if(gatherComment.isDeleted()){
+            throw new DeletedGatherCommentException();
+        }
+
+        return gatherComment;
     }
 
     private GatherComment findGatherCommentById(Long commentId) {
