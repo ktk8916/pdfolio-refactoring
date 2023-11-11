@@ -3,6 +3,7 @@ package com.playdata.pdfolio.gather.service;
 
 import com.playdata.pdfolio.gather.domain.dto.SearchDto;
 import com.playdata.pdfolio.gather.domain.request.GatherEditRequest;
+import com.playdata.pdfolio.gather.exception.DeletedGatherException;
 import com.playdata.pdfolio.gather.exception.GatherNotFoundException;
 import com.playdata.pdfolio.gather.exception.InvalidGatherDurationException;
 import com.playdata.pdfolio.gather.exception.InvalidGatherWriterException;
@@ -10,7 +11,7 @@ import com.playdata.pdfolio.global.type.SkillType;
 import com.playdata.pdfolio.gather.domain.entity.Gather;
 import com.playdata.pdfolio.gather.domain.entity.GatherComment;
 import com.playdata.pdfolio.gather.domain.entity.GatherReply;
-import com.playdata.pdfolio.gather.domain.request.WriteCommentRequest;
+import com.playdata.pdfolio.gather.domain.request.GatherCommentWriteRequest;
 import com.playdata.pdfolio.gather.domain.request.WriteReplyRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherWriteRequest;
 import com.playdata.pdfolio.gather.domain.response.GatherDetailResponse;
@@ -36,39 +37,39 @@ public class GatherService {
     private final GatherCommentRepository gatherCommentRepository;
     private final GatherReplyRepository gatherReplyRepository;
 
-    public void writeGather(Long memberId, GatherWriteRequest gatherWriteRequest){
-        if(!isValidDuration(gatherWriteRequest.startDate(), gatherWriteRequest.closeDate())){
+    public void writeGather(Long memberId, GatherWriteRequest request){
+        if(!isValidDuration(request.startDate(), request.closeDate())){
             throw new InvalidGatherDurationException();
         }
 
-        Gather gather = gatherRepository.save(gatherWriteRequest.toEntity(memberId));
+        Gather gather = gatherRepository.save(request.toEntity(memberId));
 
-        List<SkillType> skillTypes = SkillType.convertList(gatherWriteRequest.skills());
+        List<SkillType> skillTypes = SkillType.convertList(request.skills());
 
         gather.replaceGatherSkills(skillTypes);
     }
 
     @Transactional
-    public void editGather(Long gatherId, Long memberId, GatherEditRequest gatherEditRequest){
+    public void editGather(Long gatherId, Long memberId, GatherEditRequest request){
         Gather gather = findGatherById(gatherId);
 
         if(!isValidGatherWriter(gather, memberId)){
             throw new InvalidGatherWriterException();
         }
 
-        if(!isValidDuration(gatherEditRequest.startDate(), gatherEditRequest.closeDate())){
+        if(!isValidDuration(request.startDate(), request.closeDate())){
             throw new InvalidGatherDurationException();
         }
 
         gather.edit(
-                gatherEditRequest.title(),
-                gatherEditRequest.content(),
-                gatherEditRequest.startDate(),
-                gatherEditRequest.closeDate(),
-                gatherEditRequest.teamSize(),
-                gatherEditRequest.category(),
-                gatherEditRequest.contact(),
-                SkillType.convertList(gatherEditRequest.skills())
+                request.title(),
+                request.content(),
+                request.startDate(),
+                request.closeDate(),
+                request.teamSize(),
+                request.category(),
+                request.contact(),
+                SkillType.convertList(request.skills())
         );
     }
 
@@ -98,12 +99,12 @@ public class GatherService {
 
 // -----------------------------------------------------------------------------
     // 코멘트 작성
-    public void writeGatherComment(WriteCommentRequest writeCommentRequest,Long memberId){
-        gatherCommentRepository.save(writeCommentRequest.toEntity(memberId));
+    public void writeGatherComment(Long memberId, Long gatherId, GatherCommentWriteRequest request){
+        gatherCommentRepository.save(request.toEntity(memberId, gatherId));
     }
 
     // 코멘트 수정
-    public void modifyGatherComment(WriteCommentRequest writeCommentRequest,Long id){
+    public void modifyGatherComment(GatherCommentWriteRequest gatherCommentWriteRequest, Long id){
         Optional<GatherComment> optionalGatherComment = gatherCommentRepository.findById(id);
 
         if (optionalGatherComment.isPresent()) { //  있는지 확인하고 실행
@@ -145,8 +146,13 @@ public class GatherService {
     }
 
     private Gather findGatherById(Long gatherId) {
-        return gatherRepository.findByIdMemberFetch(gatherId)
+        Gather gather = gatherRepository.findByIdMemberFetch(gatherId)
                 .orElseThrow(GatherNotFoundException::new);
+
+        if(gather.isDeleted()){
+            throw new DeletedGatherException();
+        }
+        return gather;
     }
 
     private boolean isValidGatherWriter(Gather gather, Long memberId){

@@ -11,7 +11,6 @@ public interface GatherRepository extends JpaRepository<Gather, Long>, GatherSea
 
     @Query("select g from Gather g " +
             "left join fetch g.member " +
-            "where g.id = :id " +
-            "and g.isDeleted = false")
+            "where g.id = :id ")
     Optional<Gather> findByIdMemberFetch(@Param("id") Long id);
 }

@@ -5,6 +5,7 @@ import com.playdata.pdfolio.gather.domain.entity.GatherCategory;
 import com.playdata.pdfolio.gather.domain.request.GatherEditRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherWriteRequest;
 import com.playdata.pdfolio.gather.domain.response.GatherDetailResponse;
+import com.playdata.pdfolio.gather.exception.DeletedGatherException;
 import com.playdata.pdfolio.gather.exception.GatherNotFoundException;
 import com.playdata.pdfolio.gather.exception.InvalidGatherDurationException;
 import com.playdata.pdfolio.gather.exception.InvalidGatherWriterException;
@@ -12,6 +13,7 @@ import com.playdata.pdfolio.gather.repository.GatherRepository;
 import com.playdata.pdfolio.global.type.SkillType;
 import com.playdata.pdfolio.member.domain.entity.Member;
 import com.playdata.pdfolio.member.repository.MemberRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,6 +136,33 @@ class GatherServiceTest {
         // when, then
         assertThatThrownBy(()->gatherService.getGatherById(notExistGatherId))
                 .isInstanceOf(GatherNotFoundException.class);
+    }
+
+    @DisplayName("삭제된 모집글 조회 시, 예외가 발생한다.")
+    @Test
+    void getDeletedGather(){
+        // given
+        Member member = createTestMember( "철수", "www.cdn.com");
+
+        LocalDate startDate = LocalDate.of(2023, 10, 5);
+        LocalDate closeDate = LocalDate.of(2023, 11, 5);
+
+        Gather gather = createTestGather(member,
+                "제목입니다.",
+                "내용입니다.",
+                startDate,
+                closeDate,
+                5,
+                GatherCategory.PROJECT,
+                "aaa@aaa.com",
+                List.of("java", "spring"));
+
+        Gather savedGather = gatherRepository.save(gather);
+        savedGather.delete();
+
+        // when, then
+        Assertions.assertThatThrownBy(()->gatherService.getGatherById(savedGather.getId()))
+                .isInstanceOf(DeletedGatherException.class);
     }
 
     @DisplayName("모집글을 작성한다.")
