@@ -28,10 +28,11 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement-> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
-                                .requestMatchers(HttpMethod.POST,"/api/v1/auth/*").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/api/v1/oauth2/*").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/api/v1/project/*").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/api/v1/gather/*").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/api/v1/auth/**").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/api/v1/oauth2/**").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/api/v1/project/**").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/api/v1/gather/**").permitAll()
+                                .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
