@@ -264,20 +264,18 @@ class GatherServiceTest {
                 List.of("php", "mysql", "git")
         );
 
-        Gather editedgather = gatherRepository.findAll().get(0);
-
         // when
-        gatherService.editGather(editedgather.getId(), member.getId(), gatherEditRequest);
+        gatherService.editGather(savedGather.getId(), member.getId(), gatherEditRequest);
 
         // then
-        assertThat(editedgather.getTitle()).isEqualTo("수정 제목입니다.");
-        assertThat(editedgather.getContent()).isEqualTo("수정 내용입니다.");
-        assertThat(editedgather.getStartDate()).isEqualTo(editStartDate);
-        assertThat(editedgather.getCloseDate()).isEqualTo(editCloseDate);
-        assertThat(editedgather.getTeamSize()).isEqualTo(7);
-        assertThat(editedgather.getCategory()).isEqualTo(GatherCategory.STUDY);
-        assertThat(editedgather.getContact()).isEqualTo("bbb@bbb.com");
-        assertThat(editedgather.getSkills()).extracting("skillType").hasSize(3)
+        assertThat(savedGather.getTitle()).isEqualTo("수정 제목입니다.");
+        assertThat(savedGather.getContent()).isEqualTo("수정 내용입니다.");
+        assertThat(savedGather.getStartDate()).isEqualTo(editStartDate);
+        assertThat(savedGather.getCloseDate()).isEqualTo(editCloseDate);
+        assertThat(savedGather.getTeamSize()).isEqualTo(7);
+        assertThat(savedGather.getCategory()).isEqualTo(GatherCategory.STUDY);
+        assertThat(savedGather.getContact()).isEqualTo("bbb@bbb.com");
+        assertThat(savedGather.getSkills()).extracting("skillType").hasSize(3)
                 .containsExactlyInAnyOrder(SkillType.PHP, SkillType.MYSQL, SkillType.GIT);
     }
 
