@@ -22,6 +22,10 @@ public class GatherComment extends BaseEntity {
     @OneToMany(mappedBy = "comment")
     private List<GatherReply> replies;
 
+    public void edit(String content){
+        this.content = content;
+    }
+
     public static GatherComment fromId(Long id){
         GatherComment gatherComment = new GatherComment();
         gatherComment.id = id;
