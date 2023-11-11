@@ -1,5 +1,6 @@
 package com.playdata.pdfolio.gather.controller;
 
+import com.playdata.pdfolio.gather.domain.request.GatherCommentEditRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherCommentWriteRequest;
 import com.playdata.pdfolio.gather.service.GatherCommentService;
 import com.playdata.pdfolio.jwt.TokenInfo;
@@ -18,10 +19,29 @@ public class GatherCommentController {
     @PostMapping("/{gatherId}/comment")
     @ResponseStatus(HttpStatus.CREATED)
     public void writeGatherComment(
-            @AuthenticationPrincipal TokenInfo tokenInfo,
             @PathVariable("gatherId") Long gatherId,
+            @AuthenticationPrincipal TokenInfo tokenInfo,
             @RequestBody GatherCommentWriteRequest request
     ){
-        gatherCommentService.writeGatherComment(tokenInfo.getId(), gatherId, request);
+        gatherCommentService.writeGatherComment(gatherId, tokenInfo.getId(), request);
+    }
+
+    @PutMapping("/comments/{commentId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void editGatherComment(
+            @PathVariable(name = "commentId") Long commentId,
+            @AuthenticationPrincipal TokenInfo tokenInfo,
+            @RequestBody GatherCommentEditRequest request)
+    {
+        gatherCommentService.editGatherComment(commentId, tokenInfo.getId(), request);
+    }
+
+    @DeleteMapping("/comments/{commentId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void GatherCommentDelete(
+            @PathVariable(name = "commentId") Long commentId,
+            @AuthenticationPrincipal TokenInfo tokenInfo)
+    {
+        gatherCommentService.deleteGatherComment(commentId, tokenInfo.getId());
     }
 }
