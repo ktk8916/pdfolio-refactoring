@@ -1,5 +1,6 @@
 package com.playdata.pdfolio.global.exception;
 
+import com.playdata.pdfolio.gather.exception.DeletedGatherException;
 import com.playdata.pdfolio.gather.exception.GatherNotFoundException;
 import com.playdata.pdfolio.gather.exception.InvalidGatherDurationException;
 import com.playdata.pdfolio.gather.exception.InvalidGatherWriterException;
@@ -29,6 +30,7 @@ public enum ExceptionType {
 
     INVALID_GATHER_DURATION(HttpStatus.BAD_REQUEST, "유효하지 않은 모집기간 입니다.", InvalidGatherDurationException.class),
     GATHER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 모집글입니다.", GatherNotFoundException.class),
+    DELETED_GATHER(HttpStatus.NOT_FOUND, "삭제된 모집글입니다.", DeletedGatherException.class),
     INVALID_GATHER_WRITER(HttpStatus.FORBIDDEN, "유효하지 않은 모집글 작성자입니다.", InvalidGatherWriterException.class),
 
     INVALID_PROJECT_SEARCH_TYPE(HttpStatus.BAD_REQUEST, "유효하지 않은 프로젝트 검색 타입입니다.",InValidProjectSearchTypeException .class),
