@@ -99,9 +99,7 @@ public class GatherService {
 
 // -----------------------------------------------------------------------------
     // 코멘트 작성
-    public void writeGatherComment(Long memberId, Long gatherId, GatherCommentWriteRequest request){
-        gatherCommentRepository.save(request.toEntity(memberId, gatherId));
-    }
+
 
     // 코멘트 수정
     public void modifyGatherComment(GatherCommentWriteRequest gatherCommentWriteRequest, Long id){

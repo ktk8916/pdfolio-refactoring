@@ -4,7 +4,7 @@ package com.playdata.pdfolio.gather.controller;
 import com.playdata.pdfolio.gather.domain.request.GatherEditRequest;
 import com.playdata.pdfolio.jwt.TokenInfo;
 import com.playdata.pdfolio.gather.domain.dto.SearchDto;
-import com.playdata.pdfolio.gather.domain.request.WriteCommentRequest;
+import com.playdata.pdfolio.gather.domain.request.GatherCommentWriteRequest;
 import com.playdata.pdfolio.gather.domain.request.WriteReplyRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherWriteRequest;
 import com.playdata.pdfolio.gather.domain.response.GatherDetailResponse;
@@ -28,9 +28,9 @@ public class GatherController {
     @ResponseStatus(HttpStatus.CREATED)
     public void writeGather(
             @AuthenticationPrincipal TokenInfo tokenInfo,
-            @RequestBody GatherWriteRequest gatherWriteRequest
+            @RequestBody GatherWriteRequest request
     ){
-        gatherService.writeGather(tokenInfo.getId(), gatherWriteRequest);
+        gatherService.writeGather(tokenInfo.getId(), request);
     }
 
     @PutMapping("/{id}")
@@ -38,9 +38,9 @@ public class GatherController {
     public void editGather(
             @PathVariable("id") Long id,
             @AuthenticationPrincipal TokenInfo tokenInfo,
-            @RequestBody GatherEditRequest gatherEditRequest)
+            @RequestBody GatherEditRequest request)
     {
-        gatherService.editGather(id, tokenInfo.getId(), gatherEditRequest);
+        gatherService.editGather(id, tokenInfo.getId(), request);
     }
 
     @DeleteMapping("/{id}")
@@ -74,25 +74,16 @@ public class GatherController {
         return gatherService.allGather(request, searchDto);
     }
 
-
-
 // -----------------------------------------------------------------------------
     // 코멘트 작성
-    @PostMapping("/comment")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void GatherCommentWrite(
-            @RequestBody WriteCommentRequest writeCommentRequest,
-            @AuthenticationPrincipal TokenInfo tokenInfo
-    ){
-        gatherService.writeGatherComment(writeCommentRequest, tokenInfo.getMemberId());
-    }
+
     // 코멘트 수정
     @PutMapping("/comment/{id}")
     public void GatherCommentModify(
                             @PathVariable(name = "id") Long id,
-                            @RequestBody WriteCommentRequest writeCommentRequest)
+                            @RequestBody GatherCommentWriteRequest gatherCommentWriteRequest)
     {
-        gatherService.modifyGatherComment(writeCommentRequest, id);
+        gatherService.modifyGatherComment(gatherCommentWriteRequest, id);
     }
     // 코멘트 삭제
     @DeleteMapping("/comment/{id}")
