@@ -4,6 +4,7 @@ import com.playdata.pdfolio.gather.domain.entity.Gather;
 import com.playdata.pdfolio.gather.domain.entity.GatherComment;
 import com.playdata.pdfolio.gather.domain.request.GatherCommentEditRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherCommentWriteRequest;
+import com.playdata.pdfolio.gather.exception.DeletedGatherCommentException;
 import com.playdata.pdfolio.gather.exception.InvalidGatherCommentWriterException;
 import com.playdata.pdfolio.gather.repository.GatherCommentRepository;
 import com.playdata.pdfolio.gather.repository.GatherRepository;
@@ -65,6 +66,28 @@ class GatherCommentServiceTest {
 
         // then
         Assertions.assertThat(savedGatherComment.getContent()).isEqualTo("수정된 댓글입니다.");
+    }
+
+    @DisplayName("삭제된 모집글 댓글 수정 시 예외가 발생한다.")
+    @Test
+    void editDeletedGatherComment(){
+        // given
+        Member member = createTestMember();
+        Gather gather = createTestGather();
+
+        GatherComment gatherComment = GatherComment.builder()
+                .gather(gather)
+                .member(member)
+                .content("댓글입니다.")
+                .build();
+
+        GatherComment savedGatherComment = gatherCommentRepository.save(gatherComment);
+        savedGatherComment.delete();
+        GatherCommentEditRequest request = new GatherCommentEditRequest("수정된 댓글입니다.");
+
+        // when, then
+        Assertions.assertThatThrownBy(()->gatherCommentService.editGatherComment(savedGatherComment.getId(), member.getId(), request))
+                .isInstanceOf(DeletedGatherCommentException.class);
     }
 
     @DisplayName("모집글 댓글 수정 시, 작성자가 아니면 예외가 발생한다.")
