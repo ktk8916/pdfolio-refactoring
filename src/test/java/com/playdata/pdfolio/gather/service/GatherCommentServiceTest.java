@@ -6,12 +6,12 @@ import com.playdata.pdfolio.gather.domain.entity.GatherReply;
 import com.playdata.pdfolio.gather.domain.request.GatherCommentEditRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherCommentWriteRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherReplyWriteRequest;
-import com.playdata.pdfolio.gather.exception.DeletedGatherCommentException;
-import com.playdata.pdfolio.gather.exception.GatherCommentNotFoundException;
-import com.playdata.pdfolio.gather.exception.InvalidGatherCommentWriterException;
 import com.playdata.pdfolio.gather.repository.GatherCommentRepository;
 import com.playdata.pdfolio.gather.repository.GatherReplyRepository;
 import com.playdata.pdfolio.gather.repository.GatherRepository;
+import com.playdata.pdfolio.global.exception.ErrorCode;
+import com.playdata.pdfolio.global.exception.ForbiddenException;
+import com.playdata.pdfolio.global.exception.NotFoundException;
 import com.playdata.pdfolio.member.domain.entity.Member;
 import com.playdata.pdfolio.member.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
@@ -96,7 +96,8 @@ class GatherCommentServiceTest {
 
         // when, then
         Assertions.assertThatThrownBy(()->gatherCommentService.editGatherComment(savedGatherComment.getId(), member.getId(), request))
-                .isInstanceOf(DeletedGatherCommentException.class);
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ErrorCode.DELETED_CONTENT.name());
     }
 
     @DisplayName("모집글 댓글 수정 시, 작성자가 아니면 예외가 발생한다.")
@@ -120,7 +121,8 @@ class GatherCommentServiceTest {
 
         // when, then
         Assertions.assertThatThrownBy(()->gatherCommentService.editGatherComment(savedGatherComment.getId(), anotherMember.getId(), request))
-                .isInstanceOf(InvalidGatherCommentWriterException.class);
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage(ErrorCode.INVALID_AUTHOR.name());
     }
 
     @DisplayName("모집글 댓글을 삭제한다.")
@@ -164,7 +166,8 @@ class GatherCommentServiceTest {
 
         // when, then
         Assertions.assertThatThrownBy(()-> gatherCommentService.deleteGatherComment(gatherComment.getId(), anotherMember.getId()))
-                .isInstanceOf(InvalidGatherCommentWriterException.class);
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage(ErrorCode.INVALID_AUTHOR.name());
     }
 
     @DisplayName("모집글 답글을 작성한다.")
@@ -196,7 +199,8 @@ class GatherCommentServiceTest {
 
         // when, then
         assertThatThrownBy(()-> gatherCommentService.writeGatherReply(notExistCommentId, member.getId(), request))
-                .isInstanceOf(GatherCommentNotFoundException.class);
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ErrorCode.NOT_FOUND_CONTENT.name());
     }
 
     @DisplayName("삭제된 모집글 댓글에 답글을 작성 시, 예외가 발생한다.")
@@ -212,7 +216,8 @@ class GatherCommentServiceTest {
 
         // when, then
         assertThatThrownBy(()-> gatherCommentService.writeGatherReply(comment.getId(), member.getId(), request))
-                .isInstanceOf(DeletedGatherCommentException.class);
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ErrorCode.DELETED_CONTENT.name());
     }
 
 

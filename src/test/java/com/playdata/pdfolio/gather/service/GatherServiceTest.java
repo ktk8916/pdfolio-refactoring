@@ -5,11 +5,11 @@ import com.playdata.pdfolio.gather.domain.entity.GatherCategory;
 import com.playdata.pdfolio.gather.domain.request.GatherEditRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherWriteRequest;
 import com.playdata.pdfolio.gather.domain.response.GatherDetailResponse;
-import com.playdata.pdfolio.gather.exception.DeletedGatherException;
-import com.playdata.pdfolio.gather.exception.GatherNotFoundException;
 import com.playdata.pdfolio.gather.exception.InvalidGatherDurationException;
-import com.playdata.pdfolio.gather.exception.InvalidGatherWriterException;
 import com.playdata.pdfolio.gather.repository.GatherRepository;
+import com.playdata.pdfolio.global.exception.ErrorCode;
+import com.playdata.pdfolio.global.exception.ForbiddenException;
+import com.playdata.pdfolio.global.exception.NotFoundException;
 import com.playdata.pdfolio.global.type.SkillType;
 import com.playdata.pdfolio.member.domain.entity.Member;
 import com.playdata.pdfolio.member.repository.MemberRepository;
@@ -135,7 +135,8 @@ class GatherServiceTest {
 
         // when, then
         assertThatThrownBy(()->gatherService.getGatherById(notExistGatherId))
-                .isInstanceOf(GatherNotFoundException.class);
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ErrorCode.NOT_FOUND_CONTENT.name());
     }
 
     @DisplayName("삭제된 모집글 조회 시, 예외가 발생한다.")
@@ -162,7 +163,8 @@ class GatherServiceTest {
 
         // when, then
         Assertions.assertThatThrownBy(()->gatherService.getGatherById(savedGather.getId()))
-                .isInstanceOf(DeletedGatherException.class);
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ErrorCode.DELETED_CONTENT.name());
     }
 
     @DisplayName("모집글을 작성한다.")
@@ -318,7 +320,8 @@ class GatherServiceTest {
 
         // when, then
         assertThatThrownBy(()->gatherService.editGather(gather.getId(), invalidMemberId, gatherEditRequest))
-                .isInstanceOf(InvalidGatherWriterException.class);
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage(ErrorCode.INVALID_AUTHOR.name());
     }
 
     @DisplayName("모집글 수정 시, 종료일이 시작일보다 빠르면 예외가 발생한다.")
@@ -414,7 +417,8 @@ class GatherServiceTest {
 
         // when, then
         assertThatThrownBy(()->gatherService.deleteGather(gather.getId(), invalidMemberId))
-                .isInstanceOf(InvalidGatherWriterException.class);
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage(ErrorCode.INVALID_AUTHOR.name());
     }
 
     private Member createTestMember(String nickname, String imageUrl) {

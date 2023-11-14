@@ -2,23 +2,20 @@ package com.playdata.pdfolio.gather.service;
 
 
 import com.playdata.pdfolio.gather.domain.dto.SearchDto;
-import com.playdata.pdfolio.gather.domain.request.GatherEditRequest;
-import com.playdata.pdfolio.gather.exception.DeletedGatherException;
-import com.playdata.pdfolio.gather.exception.GatherNotFoundException;
-import com.playdata.pdfolio.gather.exception.InvalidGatherDurationException;
-import com.playdata.pdfolio.gather.exception.InvalidGatherWriterException;
-import com.playdata.pdfolio.global.type.SkillType;
 import com.playdata.pdfolio.gather.domain.entity.Gather;
-import com.playdata.pdfolio.gather.domain.entity.GatherComment;
 import com.playdata.pdfolio.gather.domain.entity.GatherReply;
-import com.playdata.pdfolio.gather.domain.request.GatherCommentWriteRequest;
-import com.playdata.pdfolio.gather.domain.request.WriteReplyRequest;
+import com.playdata.pdfolio.gather.domain.request.GatherEditRequest;
+import com.playdata.pdfolio.gather.domain.request.GatherReplyWriteRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherWriteRequest;
 import com.playdata.pdfolio.gather.domain.response.GatherDetailResponse;
 import com.playdata.pdfolio.gather.domain.response.GatherResponse;
-import com.playdata.pdfolio.gather.repository.GatherCommentRepository;
+import com.playdata.pdfolio.gather.exception.InvalidGatherDurationException;
 import com.playdata.pdfolio.gather.repository.GatherReplyRepository;
 import com.playdata.pdfolio.gather.repository.GatherRepository;
+import com.playdata.pdfolio.global.exception.ErrorCode;
+import com.playdata.pdfolio.global.exception.ForbiddenException;
+import com.playdata.pdfolio.global.exception.NotFoundException;
+import com.playdata.pdfolio.global.type.SkillType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,7 +31,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GatherService {
     private final GatherRepository gatherRepository;
-    private final GatherCommentRepository gatherCommentRepository;
     private final GatherReplyRepository gatherReplyRepository;
 
     public void writeGather(Long memberId, GatherWriteRequest request){
@@ -54,7 +50,7 @@ public class GatherService {
         Gather gather = findGatherById(gatherId);
 
         if(!isValidGatherWriter(gather, memberId)){
-            throw new InvalidGatherWriterException();
+            throw new ForbiddenException(ErrorCode.INVALID_AUTHOR, Gather.class, gatherId, memberId);
         }
 
         if(!isValidDuration(request.startDate(), request.closeDate())){
@@ -78,7 +74,7 @@ public class GatherService {
         Gather gather = findGatherById(gatherId);
 
         if(!isValidGatherWriter(gather, memberId)){
-            throw new InvalidGatherWriterException();
+            throw new ForbiddenException(ErrorCode.INVALID_AUTHOR, Gather.class, gatherId, memberId);
         }
 
         gather.delete();
@@ -97,36 +93,9 @@ public class GatherService {
         return all;
     }
 
-// -----------------------------------------------------------------------------
-    // 코멘트 작성
 
-
-    // 코멘트 수정
-    public void modifyGatherComment(GatherCommentWriteRequest gatherCommentWriteRequest, Long id){
-        Optional<GatherComment> optionalGatherComment = gatherCommentRepository.findById(id);
-
-        if (optionalGatherComment.isPresent()) { //  있는지 확인하고 실행
-            GatherComment existiongGatherComment = optionalGatherComment.get();
-//            existiongGatherComment.setContent(writeCommentRequest.content());
-        } else {
-            // Gather 엔터티를 찾지 못한 경우 예외 처리 또는 메시지 출력
-            // 예: throw new NotFoundException("Gather not found with id: " + writeRequest.id());
-        }
-    }
-
-    // 코멘트 삭제
-    public void deleteGatherComment(Long id){
-        GatherComment gatherComment = gatherCommentRepository.findById(id)
-                .orElseThrow(NoSuchElementException::new);
-        gatherComment.delete();
-    }
-// -----------------------------------------------------------------------------
-    // 리플라이 작성
-    public void writeGatherReply(WriteReplyRequest writeReplyRequest,Long memberId){
-        gatherReplyRepository.save(writeReplyRequest.toEntity(memberId));
-    }
     // 리플라이 수정
-    public void modifyGatherReply(WriteReplyRequest writeReplyRequest,Long id){
+    public void modifyGatherReply(GatherReplyWriteRequest gatherReplyWriteRequest, Long id){
         Optional<GatherReply> optionalGatherReply = gatherReplyRepository.findById(id);
         if (optionalGatherReply.isPresent()) { //  있는지 확인하고 실행
             GatherReply existiongGatherReply = optionalGatherReply.get();
@@ -145,10 +114,10 @@ public class GatherService {
 
     private Gather findGatherById(Long gatherId) {
         Gather gather = gatherRepository.findByIdMemberFetch(gatherId)
-                .orElseThrow(GatherNotFoundException::new);
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONTENT, Gather.class, gatherId));
 
         if(gather.isDeleted()){
-            throw new DeletedGatherException();
+            throw new NotFoundException(ErrorCode.DELETED_CONTENT, Gather.class, gatherId);
         }
         return gather;
     }
