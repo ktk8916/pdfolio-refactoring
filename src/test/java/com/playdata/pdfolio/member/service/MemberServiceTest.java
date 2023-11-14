@@ -1,5 +1,7 @@
 package com.playdata.pdfolio.member.service;
 
+import com.playdata.pdfolio.global.exception.ErrorCode;
+import com.playdata.pdfolio.global.exception.NotFoundException;
 import com.playdata.pdfolio.global.type.SkillType;
 import com.playdata.pdfolio.member.domain.entity.Member;
 import com.playdata.pdfolio.member.domain.entity.MemberSkill;
@@ -7,7 +9,6 @@ import com.playdata.pdfolio.member.domain.entity.MemberStatus;
 import com.playdata.pdfolio.member.domain.request.SignupRequest;
 import com.playdata.pdfolio.member.domain.request.UpdateRequest;
 import com.playdata.pdfolio.member.domain.response.MemberDetailResponse;
-import com.playdata.pdfolio.member.exception.MemberNotFoundException;
 import com.playdata.pdfolio.member.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
@@ -74,7 +75,8 @@ class MemberServiceTest {
 
         // when, then
         assertThatThrownBy(()->memberService.getMyProfile(id))
-                .isInstanceOf(MemberNotFoundException.class);
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ErrorCode.NOT_FOUND_CONTENT.name());
     }
 
     @DisplayName("회원가입을 한다.")
