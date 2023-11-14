@@ -1,13 +1,12 @@
 package com.playdata.pdfolio.global.exception;
 
-import com.playdata.pdfolio.gather.exception.*;
+import com.playdata.pdfolio.gather.exception.InvalidGatherDurationException;
 import com.playdata.pdfolio.member.exception.MemberNotFoundException;
 import com.playdata.pdfolio.member.exception.UnregisteredMemberException;
 import com.playdata.pdfolio.oauth2.exception.NotSupportedOauth2Exception;
 import com.playdata.pdfolio.project.exception.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
 import java.util.Arrays;
@@ -27,13 +26,7 @@ public enum ExceptionType {
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "멤버를 찾을 수 없습니댜.", MemberNotFoundException.class),
 
     INVALID_GATHER_DURATION(HttpStatus.BAD_REQUEST, "유효하지 않은 모집기간 입니다.", InvalidGatherDurationException.class),
-    GATHER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 모집글입니다.", GatherNotFoundException.class),
-    DELETED_GATHER(HttpStatus.NOT_FOUND, "삭제된 모집글입니다.", DeletedGatherException.class),
-    INVALID_GATHER_WRITER(HttpStatus.FORBIDDEN, "유효하지 않은 모집글 작성자입니다.", InvalidGatherWriterException.class),
 
-    INVALID_GATHER_COMMENT_WRITER(HttpStatus.FORBIDDEN, "유효하지 않은 모집글 댓글 작성자입니다.", InvalidGatherCommentWriterException.class),
-    GATHER_COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 모집글 댓글입니다.", GatherCommentNotFoundException.class),
-    DELETED_GATHER_COMMENT(HttpStatus.NOT_FOUND, "삭제된 모집글 댓글입니다.", DeletedGatherCommentException.class),
 
     INVALID_PROJECT_SEARCH_TYPE(HttpStatus.BAD_REQUEST, "유효하지 않은 프로젝트 검색 타입입니다.",InValidProjectSearchTypeException .class),
     INVALID_PAGE_EXCEPTION(HttpStatus.BAD_REQUEST, "유효하지 않은 페이지입니다.", InvalidPageException.class),
