@@ -4,12 +4,10 @@ import lombok.Getter;
 
 @Getter
 public class ForbiddenException extends RuntimeException {
-    private String contentType;
-    private Long contentId;
-    private Long memberId;
-    public ForbiddenException(ErrorCode e) {
-        super(e.name());
-    }
+    private final String contentType;
+    private final Long contentId;
+    private final Long memberId;
+
     public ForbiddenException(ErrorCode e, Class<?> content, Long contentId, Long memberId) {
         super(e.name());
         this.contentType = content.getSimpleName();
