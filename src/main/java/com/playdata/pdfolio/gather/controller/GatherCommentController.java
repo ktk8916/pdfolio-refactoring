@@ -2,6 +2,7 @@ package com.playdata.pdfolio.gather.controller;
 
 import com.playdata.pdfolio.gather.domain.request.GatherCommentEditRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherCommentWriteRequest;
+import com.playdata.pdfolio.gather.domain.request.GatherReplyEditRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherReplyWriteRequest;
 import com.playdata.pdfolio.gather.service.GatherCommentService;
 import com.playdata.pdfolio.jwt.TokenInfo;
@@ -54,5 +55,24 @@ public class GatherCommentController {
             @RequestBody GatherReplyWriteRequest request)
     {
         gatherCommentService.writeGatherReply(commentId, tokenInfo.getId(), request);
+    }
+
+    @PutMapping("/replies/{replyId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void editGatherReply(
+            @PathVariable(name = "replyId") Long replyId,
+            @AuthenticationPrincipal TokenInfo tokenInfo,
+            @RequestBody GatherReplyEditRequest request)
+    {
+        gatherCommentService.editGatherReply(replyId, tokenInfo.getId(), request);
+    }
+
+    @DeleteMapping("/replies/{replyId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void deleteGatherReply(
+            @PathVariable(name = "replyId") Long replyId,
+            @AuthenticationPrincipal TokenInfo tokenInfo)
+    {
+        gatherCommentService.deleteGatherReply(replyId, tokenInfo.getId());
     }
 }

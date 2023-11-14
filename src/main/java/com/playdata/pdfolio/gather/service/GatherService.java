@@ -3,9 +3,7 @@ package com.playdata.pdfolio.gather.service;
 
 import com.playdata.pdfolio.gather.domain.dto.SearchDto;
 import com.playdata.pdfolio.gather.domain.entity.Gather;
-import com.playdata.pdfolio.gather.domain.entity.GatherReply;
 import com.playdata.pdfolio.gather.domain.request.GatherEditRequest;
-import com.playdata.pdfolio.gather.domain.request.GatherReplyWriteRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherWriteRequest;
 import com.playdata.pdfolio.gather.domain.response.GatherDetailResponse;
 import com.playdata.pdfolio.gather.domain.response.GatherResponse;
@@ -24,8 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -91,25 +87,6 @@ public class GatherService {
     public Page<GatherResponse> allGather(PageRequest request, SearchDto searchDto){
         Page<GatherResponse> all = gatherRepository.findAllByCondition(request,searchDto);
         return all;
-    }
-
-
-    // 리플라이 수정
-    public void modifyGatherReply(GatherReplyWriteRequest gatherReplyWriteRequest, Long id){
-        Optional<GatherReply> optionalGatherReply = gatherReplyRepository.findById(id);
-        if (optionalGatherReply.isPresent()) { //  있는지 확인하고 실행
-            GatherReply existiongGatherReply = optionalGatherReply.get();
-//            existiongGatherReply.setContent(writeReplyRequest.content());
-        } else {
-            // Gather 엔터티를 찾지 못한 경우 예외 처리 또는 메시지 출력
-            // 예: throw new NotFoundException("Gather not found with id: " + writeRequest.id());
-        }
-    }
-    // 리플라이 삭제
-    public void deleteGatherReply(Long id){
-        GatherReply gatherReply = gatherReplyRepository.findById(id)
-                .orElseThrow(NoSuchElementException::new);
-        gatherReply.delete();
     }
 
     private Gather findGatherById(Long gatherId) {

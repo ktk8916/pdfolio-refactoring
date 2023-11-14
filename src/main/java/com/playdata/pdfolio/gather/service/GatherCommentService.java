@@ -78,6 +78,17 @@ public class GatherCommentService {
         return reply;
     }
 
+    @Transactional
+    public void deleteGatherReply(Long replyId, Long memberId) {
+        GatherReply reply = findGatherReplyById(replyId);
+
+        if(!isValidGatherReplyWriter(reply, memberId)){
+            throw new ForbiddenException(ErrorCode.INVALID_AUTHOR, GatherReply.class, replyId, memberId);
+        }
+
+        reply.delete();
+    }
+
     private GatherComment findGatherCommentById(Long commentId) {
         GatherComment gatherComment = gatherCommentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_CONTENT, GatherComment.class, commentId));

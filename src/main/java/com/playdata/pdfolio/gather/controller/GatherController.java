@@ -4,8 +4,7 @@ package com.playdata.pdfolio.gather.controller;
 import com.playdata.pdfolio.gather.domain.request.GatherEditRequest;
 import com.playdata.pdfolio.jwt.TokenInfo;
 import com.playdata.pdfolio.gather.domain.dto.SearchDto;
-import com.playdata.pdfolio.gather.domain.request.GatherCommentWriteRequest;
-import com.playdata.pdfolio.gather.domain.request.WriteReplyRequest;
+import com.playdata.pdfolio.gather.domain.request.GatherReplyWriteRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherWriteRequest;
 import com.playdata.pdfolio.gather.domain.response.GatherDetailResponse;
 import com.playdata.pdfolio.gather.domain.response.GatherResponse;
@@ -74,44 +73,4 @@ public class GatherController {
         return gatherService.allGather(request, searchDto);
     }
 
-// -----------------------------------------------------------------------------
-    // 코멘트 작성
-
-    // 코멘트 수정
-    @PutMapping("/comment/{id}")
-    public void GatherCommentModify(
-                            @PathVariable(name = "id") Long id,
-                            @RequestBody GatherCommentWriteRequest gatherCommentWriteRequest)
-    {
-        gatherService.modifyGatherComment(gatherCommentWriteRequest, id);
-    }
-    // 코멘트 삭제
-    @DeleteMapping("/comment/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void GatherCommentDelete(@PathVariable(name = "id") Long id){
-        gatherService.deleteGatherComment(id);
-    }
-// -----------------------------------------------------------------------------
-    // 리플라이 작성
-    @PostMapping("/reply")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void GatherReplyWrite(
-            @RequestBody WriteReplyRequest writeReplyRequest,
-            @AuthenticationPrincipal TokenInfo tokenInfo
-    ){
-        gatherService.writeGatherReply(writeReplyRequest, tokenInfo.getMemberId());
-    }
-
-    // 리플라이 수정
-    @PutMapping("/reply/{id}")
-    public void GatherReplyModify(@PathVariable(name = "id") Long id,
-                             @RequestBody WriteReplyRequest writeReplyRequest)
-    {
-        gatherService.modifyGatherReply(writeReplyRequest, id);
-    }
-    // 리플라이 삭제
-    @DeleteMapping("/reply/{id}")
-    public void GatherReplyDelete(@PathVariable(name = "id") Long id){
-        gatherService.deleteGatherReply(id);
-    }
 }

@@ -5,6 +5,7 @@ import com.playdata.pdfolio.gather.domain.entity.GatherComment;
 import com.playdata.pdfolio.gather.domain.entity.GatherReply;
 import com.playdata.pdfolio.gather.domain.request.GatherCommentEditRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherCommentWriteRequest;
+import com.playdata.pdfolio.gather.domain.request.GatherReplyEditRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherReplyWriteRequest;
 import com.playdata.pdfolio.gather.repository.GatherCommentRepository;
 import com.playdata.pdfolio.gather.repository.GatherReplyRepository;
@@ -220,6 +221,90 @@ class GatherCommentServiceTest {
                 .hasMessage(ErrorCode.DELETED_CONTENT.name());
     }
 
+    @DisplayName("모집글 답글을 수정한다.")
+    @Test
+    void editGatherReply(){
+        // given
+        GatherReply reply = createTestGatherReply();
+        GatherReplyEditRequest request = new GatherReplyEditRequest("답글 수정입니다.");
+
+        // when
+        gatherCommentService.editGatherReply(reply.getId(), reply.getMember().getId(), request);
+
+        // then
+        assertThat(reply.getContent()).isEqualTo("답글 수정입니다.");
+    }
+
+    @DisplayName("모집글 답글 수정 시, 작성자가 아니면 예외가 발생한다.")
+    @Test
+    void editGatherCommentInvalidAuthor(){
+        // given
+        GatherReply reply = createTestGatherReply();
+        GatherReplyEditRequest request = new GatherReplyEditRequest("답글 수정입니다.");
+
+        Member anotherMember = createTestMember();
+
+        // when, then
+        assertThatThrownBy(()->gatherCommentService.editGatherReply(reply.getId(), anotherMember.getId(), request))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage(ErrorCode.INVALID_AUTHOR.name());
+    }
+
+    @DisplayName("존재하지 않는 모집글 답글 수정 시, 예외가 발생한다.")
+    @Test
+    void editNotExistGatherReply(){
+        // given
+        Long notExistReplyId = 999999L;
+
+        Member member = createTestMember();
+        GatherReplyEditRequest request = new GatherReplyEditRequest("답글 수정입니다.");
+
+        // when, then
+        assertThatThrownBy(()-> gatherCommentService.editGatherReply(notExistReplyId, member.getId(), request))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ErrorCode.NOT_FOUND_CONTENT.name());
+    }
+
+    @DisplayName("삭제된 모집글 답글 수정 시, 예외가 발생한다.")
+    @Test
+    void editDeletedGatherReply(){
+        // given
+        GatherReply reply = createTestGatherReply();
+        reply.delete();
+        GatherReplyEditRequest request = new GatherReplyEditRequest("답글 수정입니다.");
+
+        // when, then
+        assertThatThrownBy(()-> gatherCommentService.editGatherReply(reply.getId(), reply.getMember().getId(), request))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(ErrorCode.DELETED_CONTENT.name());
+    }
+    
+    @DisplayName("모집글 답글을 삭제한다.")
+    @Test
+    void deleteGatherReply(){
+        // given
+        GatherReply reply = createTestGatherReply();
+
+        // when
+        gatherCommentService.deleteGatherReply(reply.getId(), reply.getMember().getId());
+        
+        // then
+        assertThat(reply.isDeleted()).isTrue();
+    }
+
+    @DisplayName("모집글 답글 삭제 시, 작성자가 아니면 예외가 발생한다.")
+    @Test
+    void deleteGatherReplyInvalidWriter(){
+        // given
+        GatherReply reply = createTestGatherReply();
+        Member anotherMember = createTestMember();
+
+        // when, then
+        assertThatThrownBy(()-> gatherCommentService.deleteGatherReply(reply.getId(), anotherMember.getId()))
+                .isInstanceOf(ForbiddenException.class)
+                .hasMessage(ErrorCode.INVALID_AUTHOR.name());
+    }
+
 
     @Autowired
     private MemberRepository memberRepository;
@@ -250,5 +335,22 @@ class GatherCommentServiceTest {
                 .build();
 
         return gatherCommentRepository.save(gatherComment);
+    }
+
+    private GatherReply createTestGatherReply(){
+        Member member = createTestMember();
+        Gather gather = createTestGather();
+
+        GatherComment comment = GatherComment.builder()
+                .member(member)
+                .gather(gather)
+                .build();
+
+        GatherReply reply = GatherReply.builder()
+                .comment(comment)
+                .member(member)
+                .build();
+
+        return gatherReplyRepository.save(reply);
     }
 }
