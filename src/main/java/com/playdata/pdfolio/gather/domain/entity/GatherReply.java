@@ -18,6 +18,10 @@ public class GatherReply extends BaseEntity {
     private Member member;
     private String content;
 
+    public void edit(String content){
+        this.content = content;
+    }
+
     public static GatherReply createGatherReply(GatherComment gatherComment, Member member, String content){
         return GatherReply.builder()
                 .comment(gatherComment)
