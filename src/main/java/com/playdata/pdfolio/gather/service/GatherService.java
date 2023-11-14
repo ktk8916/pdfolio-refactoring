@@ -9,9 +9,9 @@ import com.playdata.pdfolio.gather.domain.request.GatherReplyWriteRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherWriteRequest;
 import com.playdata.pdfolio.gather.domain.response.GatherDetailResponse;
 import com.playdata.pdfolio.gather.domain.response.GatherResponse;
-import com.playdata.pdfolio.gather.exception.InvalidGatherDurationException;
 import com.playdata.pdfolio.gather.repository.GatherReplyRepository;
 import com.playdata.pdfolio.gather.repository.GatherRepository;
+import com.playdata.pdfolio.global.exception.BadRequestException;
 import com.playdata.pdfolio.global.exception.ErrorCode;
 import com.playdata.pdfolio.global.exception.ForbiddenException;
 import com.playdata.pdfolio.global.exception.NotFoundException;
@@ -35,7 +35,7 @@ public class GatherService {
 
     public void writeGather(Long memberId, GatherWriteRequest request){
         if(!isValidDuration(request.startDate(), request.closeDate())){
-            throw new InvalidGatherDurationException();
+            throw new BadRequestException(ErrorCode.INVALID_DURATION);
         }
 
         Gather gather = gatherRepository.save(request.toEntity(memberId));
@@ -54,7 +54,7 @@ public class GatherService {
         }
 
         if(!isValidDuration(request.startDate(), request.closeDate())){
-            throw new InvalidGatherDurationException();
+            throw new BadRequestException(ErrorCode.INVALID_DURATION);
         }
 
         gather.edit(

@@ -1,6 +1,7 @@
 package com.playdata.pdfolio.oauth2.dto;
 
-import com.playdata.pdfolio.oauth2.exception.NotSupportedOauth2Exception;
+import com.playdata.pdfolio.global.exception.BadRequestException;
+import com.playdata.pdfolio.global.exception.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -33,7 +34,7 @@ public enum Oauth2UserInfo {
         return Arrays.stream(values())
                 .filter(oauth2UserInfo -> oauth2UserInfo.provider.equals(provider))
                 .findFirst()
-                .orElseThrow(NotSupportedOauth2Exception::new)
+                .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_SUPPORTED_OAUTH2))
                 .extract(attributes);
     }
 

@@ -1,6 +1,7 @@
 package com.playdata.pdfolio.oauth2.provider;
 
-import com.playdata.pdfolio.oauth2.exception.NotSupportedOauth2Exception;
+import com.playdata.pdfolio.global.exception.BadRequestException;
+import com.playdata.pdfolio.global.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -50,6 +51,7 @@ class ProviderFactoryTest {
 
         // when, when
         assertThatThrownBy(()->providerFactory.getProvider(wrongName))
-                .isInstanceOf(NotSupportedOauth2Exception.class);
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(ErrorCode.NOT_SUPPORTED_OAUTH2.name());
     }
 }

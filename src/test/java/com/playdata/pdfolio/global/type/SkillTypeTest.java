@@ -1,6 +1,7 @@
 package com.playdata.pdfolio.global.type;
 
-import com.playdata.pdfolio.global.exception.NoMatchingSkillTypeException;
+import com.playdata.pdfolio.global.exception.BadRequestException;
+import com.playdata.pdfolio.global.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +33,8 @@ class SkillTypeTest {
 
         // when, then
         assertThatThrownBy(()->SkillType.fromName(invalidName))
-                .isInstanceOf(NoMatchingSkillTypeException.class);
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(ErrorCode.NO_MATCHING_SKILL.name());
     }
 
     @DisplayName("skill list를 SkillType list로 변환한다.")

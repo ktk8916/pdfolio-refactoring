@@ -1,12 +1,12 @@
 package com.playdata.pdfolio.global.type;
 
-import com.playdata.pdfolio.global.exception.NoMatchingSkillTypeException;
+import com.playdata.pdfolio.global.exception.BadRequestException;
+import com.playdata.pdfolio.global.exception.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor
@@ -58,6 +58,6 @@ public enum SkillType {
         return Arrays.stream(values())
                 .filter(skillType -> skillType.name().equalsIgnoreCase(skill))
                 .findFirst()
-                .orElseThrow(NoMatchingSkillTypeException::new);
+                .orElseThrow(() -> new BadRequestException(ErrorCode.NO_MATCHING_SKILL));
     }
 }

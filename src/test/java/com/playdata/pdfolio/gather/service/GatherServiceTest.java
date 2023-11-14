@@ -5,8 +5,8 @@ import com.playdata.pdfolio.gather.domain.entity.GatherCategory;
 import com.playdata.pdfolio.gather.domain.request.GatherEditRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherWriteRequest;
 import com.playdata.pdfolio.gather.domain.response.GatherDetailResponse;
-import com.playdata.pdfolio.gather.exception.InvalidGatherDurationException;
 import com.playdata.pdfolio.gather.repository.GatherRepository;
+import com.playdata.pdfolio.global.exception.BadRequestException;
 import com.playdata.pdfolio.global.exception.ErrorCode;
 import com.playdata.pdfolio.global.exception.ForbiddenException;
 import com.playdata.pdfolio.global.exception.NotFoundException;
@@ -228,7 +228,8 @@ class GatherServiceTest {
 
         // when, then
         assertThatThrownBy(()->gatherService.writeGather(memberId, gatherWriteRequest))
-                .isInstanceOf(InvalidGatherDurationException.class);
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(ErrorCode.INVALID_DURATION.name());
     }
 
     @DisplayName("모집글을 수정한다.")
@@ -361,7 +362,8 @@ class GatherServiceTest {
 
         // when, then
         assertThatThrownBy(()->gatherService.editGather(gather.getId(), member.getId(), gatherEditRequest))
-                .isInstanceOf(InvalidGatherDurationException.class);
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage(ErrorCode.INVALID_DURATION.name());
     }
 
     @DisplayName("모집글을 삭제한다.")

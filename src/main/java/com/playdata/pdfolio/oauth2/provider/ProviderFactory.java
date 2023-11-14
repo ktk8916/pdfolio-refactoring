@@ -1,6 +1,7 @@
 package com.playdata.pdfolio.oauth2.provider;
 
-import com.playdata.pdfolio.oauth2.exception.NotSupportedOauth2Exception;
+import com.playdata.pdfolio.global.exception.BadRequestException;
+import com.playdata.pdfolio.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +16,7 @@ public class ProviderFactory {
         return switch (provider) {
             case "github" -> githubProvider;
             case "kakao" -> kaKaoProvider;
-            default -> throw new NotSupportedOauth2Exception();
+            default -> throw new BadRequestException(ErrorCode.NOT_SUPPORTED_OAUTH2);
         };
     }
 }
