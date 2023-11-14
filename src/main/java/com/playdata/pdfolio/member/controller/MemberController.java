@@ -2,7 +2,7 @@ package com.playdata.pdfolio.member.controller;
 
 import com.playdata.pdfolio.jwt.TokenInfo;
 import com.playdata.pdfolio.member.domain.request.SignupRequest;
-import com.playdata.pdfolio.member.domain.request.UpdateRequest;
+import com.playdata.pdfolio.member.domain.request.ProfileEditRequest;
 import com.playdata.pdfolio.member.domain.response.MemberDetailResponse;
 import com.playdata.pdfolio.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +30,8 @@ public class MemberController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void editProfile(@AuthenticationPrincipal TokenInfo tokenInfo, @RequestBody UpdateRequest updateRequest){
-        memberService.editProfile(tokenInfo.getId(), updateRequest);
+    public void editProfile(@AuthenticationPrincipal TokenInfo tokenInfo, @RequestBody ProfileEditRequest profileEditRequest){
+        memberService.editProfile(tokenInfo.getId(), profileEditRequest);
     }
 
     @DeleteMapping

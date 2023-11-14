@@ -6,7 +6,7 @@ import com.playdata.pdfolio.global.type.SkillType;
 import com.playdata.pdfolio.member.domain.entity.Member;
 import com.playdata.pdfolio.member.domain.entity.MemberSkill;
 import com.playdata.pdfolio.member.domain.request.SignupRequest;
-import com.playdata.pdfolio.member.domain.request.UpdateRequest;
+import com.playdata.pdfolio.member.domain.request.ProfileEditRequest;
 import com.playdata.pdfolio.member.domain.response.MemberDetailResponse;
 import com.playdata.pdfolio.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,13 +36,13 @@ public class MemberService {
         );
     }
 
-    public void editProfile(Long id, UpdateRequest updateRequest){
+    public void editProfile(Long id, ProfileEditRequest profileEditRequest){
         Member member = findByIdFetchSkill(id);
 
         member.update(
-                updateRequest.nickname(),
-                updateRequest.imageUrl(),
-                SkillType.convertList(updateRequest.skills()).stream()
+                profileEditRequest.nickname(),
+                profileEditRequest.imageUrl(),
+                SkillType.convertList(profileEditRequest.skills()).stream()
                         .map(skillType -> MemberSkill.of(member, skillType))
                         .toList()
         );

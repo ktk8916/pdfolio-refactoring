@@ -7,7 +7,7 @@ import com.playdata.pdfolio.member.domain.entity.Member;
 import com.playdata.pdfolio.member.domain.entity.MemberSkill;
 import com.playdata.pdfolio.member.domain.entity.MemberStatus;
 import com.playdata.pdfolio.member.domain.request.SignupRequest;
-import com.playdata.pdfolio.member.domain.request.UpdateRequest;
+import com.playdata.pdfolio.member.domain.request.ProfileEditRequest;
 import com.playdata.pdfolio.member.domain.response.MemberDetailResponse;
 import com.playdata.pdfolio.member.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
@@ -112,12 +112,12 @@ class MemberServiceTest {
                 .skills(List.of(MemberSkill.builder().skillType(SkillType.PHP).build()))
                 .build();
         Member savedMember = memberRepository.save(member);
-        UpdateRequest updateRequest = new UpdateRequest("nick", "www.cdn.com", List.of("java", "spring"));
+        ProfileEditRequest profileEditRequest = new ProfileEditRequest("nick", "www.cdn.com", List.of("java", "spring"));
 
         clearContext();
 
         // when
-        memberService.editProfile(savedMember.getId(), updateRequest);
+        memberService.editProfile(savedMember.getId(), profileEditRequest);
 
         // then
         Member findMember = memberRepository.findById(savedMember.getId()).get();
