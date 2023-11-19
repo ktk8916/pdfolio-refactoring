@@ -3,6 +3,7 @@ package com.playdata.pdfolio.gather.repository;
 import com.playdata.pdfolio.gather.domain.dto.SearchDto;
 import com.playdata.pdfolio.gather.domain.entity.Gather;
 import com.playdata.pdfolio.gather.domain.entity.GatherCategory;
+import com.playdata.pdfolio.gather.domain.entity.GatherComment;
 import com.playdata.pdfolio.gather.domain.entity.QGatherSkill;
 import com.playdata.pdfolio.gather.domain.response.GatherResponse;
 import com.playdata.pdfolio.global.type.SkillType;
@@ -25,8 +26,21 @@ import static com.playdata.pdfolio.gather.domain.entity.QGatherSkill.gatherSkill
 import static com.playdata.pdfolio.member.domain.entity.QMember.member;
 
 
-public class GatherSearchRepositoryImpl implements GatherSearchRepository{
+public class CustomGatherRepositoryImpl implements CustomGatherRepository {
     private final JPAQueryFactory queryFactory;
+
+    @Override
+    public List<GatherComment> findCommentsByGatherId(Long gatherId) {
+        return queryFactory.selectFrom(gatherComment)
+                .leftJoin(gatherComment.replies, gatherReply)
+                .fetchJoin()
+                .where(
+                        gatherComment.gather.id.eq(gatherId),
+                        gatherComment.isDeleted.isFalse(),
+                        gatherReply.isNull().or(gatherReply.isDeleted.isFalse())
+                )
+                .fetch();
+    }
 
     @Override
     public Page<GatherResponse> findAllByCondition(
@@ -76,21 +90,6 @@ public class GatherSearchRepositoryImpl implements GatherSearchRepository{
         return new PageImpl<>(gatherResponses, request, totalSize);
     }
 
-    @Override
-    public Gather findByIdIncludingUndeletedComments(Long id) {
-        BooleanExpression isCommentDeletedFalse = gatherComment.isDeleted.isFalse();
-        BooleanExpression isReplyDeletedFalse = gatherReply.isDeleted.isFalse();
-        return queryFactory
-                .selectFrom(gather)
-                .distinct()
-                .leftJoin(gather.skills)
-                .leftJoin(gather.comments, gatherComment)
-                .fetchJoin()
-                .where(
-                        gather.id.eq(id)
-                )
-                .fetchOne();
-    }
 
     private BooleanExpression keywordContains(String keyword) {
         return keyword == null
@@ -128,7 +127,7 @@ public class GatherSearchRepositoryImpl implements GatherSearchRepository{
 
 
 
-    public GatherSearchRepositoryImpl(EntityManager entityManager) {
+    public CustomGatherRepositoryImpl(EntityManager entityManager) {
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 }

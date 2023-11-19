@@ -21,7 +21,7 @@ public class GatherCommentController {
     @PostMapping("/{gatherId}/comment")
     @ResponseStatus(HttpStatus.CREATED)
     public void writeGatherComment(
-            @PathVariable("gatherId") Long gatherId,
+            @PathVariable Long gatherId,
             @AuthenticationPrincipal TokenInfo tokenInfo,
             @RequestBody GatherCommentWriteRequest request)
     {
@@ -31,7 +31,7 @@ public class GatherCommentController {
     @PutMapping("/comments/{commentId}")
     @ResponseStatus(HttpStatus.CREATED)
     public void editGatherComment(
-            @PathVariable(name = "commentId") Long commentId,
+            @PathVariable Long commentId,
             @AuthenticationPrincipal TokenInfo tokenInfo,
             @RequestBody GatherCommentEditRequest request)
     {
@@ -41,7 +41,7 @@ public class GatherCommentController {
     @DeleteMapping("/comments/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void GatherCommentDelete(
-            @PathVariable(name = "commentId") Long commentId,
+            @PathVariable Long commentId,
             @AuthenticationPrincipal TokenInfo tokenInfo)
     {
         gatherCommentService.deleteGatherComment(commentId, tokenInfo.getId());
@@ -50,7 +50,7 @@ public class GatherCommentController {
     @PostMapping("/comments/{commentId}/reply")
     @ResponseStatus(HttpStatus.CREATED)
     public void writeGatherReply(
-            @PathVariable(name = "commentId") Long commentId,
+            @PathVariable Long commentId,
             @AuthenticationPrincipal TokenInfo tokenInfo,
             @RequestBody GatherReplyWriteRequest request)
     {
@@ -60,7 +60,7 @@ public class GatherCommentController {
     @PutMapping("/replies/{replyId}")
     @ResponseStatus(HttpStatus.CREATED)
     public void editGatherReply(
-            @PathVariable(name = "replyId") Long replyId,
+            @PathVariable Long replyId,
             @AuthenticationPrincipal TokenInfo tokenInfo,
             @RequestBody GatherReplyEditRequest request)
     {
@@ -70,7 +70,7 @@ public class GatherCommentController {
     @DeleteMapping("/replies/{replyId}")
     @ResponseStatus(HttpStatus.CREATED)
     public void deleteGatherReply(
-            @PathVariable(name = "replyId") Long replyId,
+            @PathVariable Long replyId,
             @AuthenticationPrincipal TokenInfo tokenInfo)
     {
         gatherCommentService.deleteGatherReply(replyId, tokenInfo.getId());

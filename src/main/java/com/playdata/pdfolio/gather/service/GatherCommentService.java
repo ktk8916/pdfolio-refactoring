@@ -6,6 +6,7 @@ import com.playdata.pdfolio.gather.domain.request.GatherCommentEditRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherCommentWriteRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherReplyEditRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherReplyWriteRequest;
+import com.playdata.pdfolio.gather.domain.response.GatherCommentResponse;
 import com.playdata.pdfolio.gather.repository.GatherCommentRepository;
 import com.playdata.pdfolio.gather.repository.GatherReplyRepository;
 import com.playdata.pdfolio.global.exception.ErrorCode;
@@ -14,6 +15,8 @@ import com.playdata.pdfolio.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor

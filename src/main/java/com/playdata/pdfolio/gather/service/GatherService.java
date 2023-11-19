@@ -5,9 +5,9 @@ import com.playdata.pdfolio.gather.domain.dto.SearchDto;
 import com.playdata.pdfolio.gather.domain.entity.Gather;
 import com.playdata.pdfolio.gather.domain.request.GatherEditRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherWriteRequest;
+import com.playdata.pdfolio.gather.domain.response.GatherCommentResponse;
 import com.playdata.pdfolio.gather.domain.response.GatherDetailResponse;
 import com.playdata.pdfolio.gather.domain.response.GatherResponse;
-import com.playdata.pdfolio.gather.repository.GatherReplyRepository;
 import com.playdata.pdfolio.gather.repository.GatherRepository;
 import com.playdata.pdfolio.global.exception.BadRequestException;
 import com.playdata.pdfolio.global.exception.ErrorCode;
@@ -27,7 +27,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GatherService {
     private final GatherRepository gatherRepository;
-    private final GatherReplyRepository gatherReplyRepository;
+
+    public List<GatherCommentResponse> getCommentsByGatherId(Long gatherId) {
+        return gatherRepository.findCommentsByGatherId(gatherId).stream()
+                .map(GatherCommentResponse::fromEntity)
+                .toList();
+    }
 
     public void writeGather(Long memberId, GatherWriteRequest request){
         if(!isValidDuration(request.startDate(), request.closeDate())){

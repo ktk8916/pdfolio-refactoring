@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface GatherRepository extends JpaRepository<Gather, Long>, GatherSearchRepository {
+public interface GatherRepository extends JpaRepository<Gather, Long>, CustomGatherRepository {
 
     @Query("select g from Gather g " +
             "left join fetch g.member " +
