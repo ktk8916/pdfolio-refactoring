@@ -18,7 +18,7 @@
 - Spring Boot 3.x.x, Spring Security, Spring Data Jpa
 - MySQL
 - JPA, Query Dsl
-- Oauth2
+- Oauth2, JWT
 - Jacoco, JUnit
 
 
