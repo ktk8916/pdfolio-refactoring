@@ -8,6 +8,8 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -26,20 +28,32 @@ public class CustomGatherRepositoryImpl implements CustomGatherRepository {
     }
 
     @Override
-    public List<Gather> findGathersByCondition(String keyword, GatherCategory category, List<SkillType> skills, Pageable pageRequest) {
+    public Page<Gather> findGathersByCondition(String keyword, GatherCategory category, List<SkillType> skills, Pageable pageRequest) {
 
-        return queryFactory.selectFrom(gather)
+        List<Gather> gathers = queryFactory.selectFrom(gather)
                 .innerJoin(gather.member, member)
-                .leftJoin(gather.skills, gatherSkill)
                 .fetchJoin()
+                .leftJoin(gather.skills, gatherSkill)
                 .where(
                         matchTitleAndContentAgainstKeyword(keyword),
                         eqCategory(category),
                         inSkills(skills)
                 )
-                .offset(pageRequest.getOffset())
                 .limit(pageRequest.getPageSize())
+                .offset(pageRequest.getOffset())
                 .fetch();
+
+        Long totalSize = queryFactory.select(gather.count())
+                .from(gather)
+                .leftJoin(gather.skills, gatherSkill)
+                .where(
+                        matchTitleAndContentAgainstKeyword(keyword),
+                        eqCategory(category),
+                        inSkills(skills)
+                )
+                .fetchOne();
+
+        return new PageImpl<>(gathers, pageRequest, totalSize);
     }
 
     private BooleanExpression matchTitleAndContentAgainstKeyword(String keyword){
