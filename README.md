@@ -54,19 +54,48 @@
 ### 2. 게시글 이미지 처리
 
 - 현재는 화면에서 작성된 게시글과 사진을 base64 인코딩과 md양식으로 변환하여 RDB에 통으로 저장
-- 이를 스토리지 서비스를 사용하거나, 조회용 NoSQL을 사용하여 분리
+- 이를 스토리지 서비스를 사용하도록 변경
 
 ---
 
 ## 리팩토링
 
-### 1. 테스트 코드 작성
+### 1. %keyword% 쿼리 개선
 
- - 테스트 코드 60개 작성
- - Jacoco 테스트 커버리지 기존 21% -> 48%
- - 꾸준하게 진행 중
+#### 문제상황
+
+- 게시물에 대한 검색을 위해 title, content 컬럼에 대해서 %keyword% 검색을 하고있었음
+- 이는 인덱스를 활용하지 못하고 모든 테이블에 대해 검색하는 풀스캔이 일어나서 성능 이슈가 생길 수 있음
+- 작성한 게시글 200개와 임의로 생성한 30만개의 게시글에 대해 테스트한 결과 평균 조회시간이 8초 정도 소요
+
+#### 해결
+
+- 이를 해결하기 위해 MySQL 에서 지원하는 fulltext index와 match against 쿼리를 사용
+- 게시글은 대부분 한국어로 작성되기 때문에 내장 Ngram Parser를 사용하여 title, content에 대해 2글자 단위로 fulltext index 생성
+- Query DSL 에서 match ~ against 라는 MySQL 방언을 사용하기 위해 `CustomFunctionContributor` 등록
+
+
+평균 `8000ms` 에서 `16ms` 으로 조회 성능 향상
+
+
+### 2. fetch join paging
+
+#### 문제상황
+
+![image](https://github.com/ktk8916/pdfolio-refactoring/assets/71807768/b277ef40-752f-4141-9469-39d5de34ab02)
+
+- 프로젝트에서 사용하는 모집글 테이블은 하나의 게시글에 여러개의 기술스택이 달릴 수 있는 1 : N 구조였음  
+- 특정 기술스택에 맞는 모집글을 가져오기 위해 게시글과 기술스택을 fetch join 하여 where 쿼리 실행
+- fetch join 결과에 paging 처리 시 Hibernate가 모든 데이터를 메모리로 가져와서 paging 하여 `firstResult/maxResults specified with collection fetch; applying in memory` 발생
+
+#### 해결
+
+- 모집글에 가지고 있는 skills에 대해 @BatchSize를 지정하여 즉시로딩
+
    
-### 2. 의존성 분리
+### 3. 의존성 분리
+
+#### 문제상황
 
 기존 코드에선 `oauth2` 서버에 유저 정보를 가져오는 Oauth2Service의 `getUserInfo` 메서드와,  
 `내 서비스`의 회원인지를 판별하는 코드가 같은 곳에서 사용되어 책임이 불분명하고 테스트가 어려웠음
@@ -95,6 +124,8 @@ public class Oauth2Service {
         return new Oauth2Response(loginInfoDto, token);
     }
 ```
+
+#### 해결
 
 이를 `oauth2` 서버에 유저 정보를 가져오는 `Oauth2Client`와  
 회원을 확인하는 `AuthService`로 나누어 책임을 분리하였음
@@ -134,8 +165,15 @@ public class AuthService {
     }
 }
 ```
+
 결과적으로 각 메서드의 역할이 분명해졌고,  
 `Oauth2Client mocking`으로 인해 테스트가 용이해짐
+
+### 4. 테스트 코드 작성
+
+ - 테스트 코드 60개 작성
+ - Jacoco 테스트 커버리지 기존 21% -> 48%
+ - 꾸준하게 진행 중
 
 ## 시연
 
