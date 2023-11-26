@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class Gather extends BaseEntity {
     private int viewCount;
     @ManyToOne
     private Member member;
+    @BatchSize(size = 50)
     @OneToMany(mappedBy = "gather", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GatherSkill> skills = new ArrayList<>();
     @OneToMany(mappedBy = "gather")
