@@ -12,35 +12,37 @@ import java.util.List;
 @RequiredArgsConstructor
 public enum SkillType {
 
-    // Language
     JAVA("java"),
     KOTLIN("kotlin"),
     JAVASCRIPT("javascript"),
     TYPESCRIPT("typescript"),
     PYTHON("python"),
     PHP("php"),
+    NODE("node"),
 
-    // Framework
     SPRING("spring"),
     NEST("nest"),
+    ANGULAR("angular"),
     EXPRESS("express"),
     DJANGO("django"),
+    FLASK("flask"),
     LARAVEL("laravel"),
     REACT("react"),
     VUE("vue"),
     NEXT("next"),
     NUXT("nuxt"),
+    REACT_NATIVE("react native"),
+    MONGODB("mongodb"),
 
-    // database
+    GRAPHQL("graphql"),
     ORACLE("oracle"),
     MYSQL("mysql"),
     POSTGRESQL("postgresql"),
 
-    // infra
     AWS("aws"),
     DOCKER("docker"),
+    FIREBASE("firebase"),
 
-    // etc
     GIT("git"),
 
     ;
