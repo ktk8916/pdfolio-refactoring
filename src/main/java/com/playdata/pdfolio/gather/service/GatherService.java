@@ -1,13 +1,13 @@
 package com.playdata.pdfolio.gather.service;
 
 
-import com.playdata.pdfolio.gather.domain.dto.SearchDto;
 import com.playdata.pdfolio.gather.domain.entity.Gather;
+import com.playdata.pdfolio.gather.domain.entity.GatherCategory;
 import com.playdata.pdfolio.gather.domain.request.GatherEditRequest;
 import com.playdata.pdfolio.gather.domain.request.GatherWriteRequest;
 import com.playdata.pdfolio.gather.domain.response.GatherCommentResponse;
 import com.playdata.pdfolio.gather.domain.response.GatherDetailResponse;
-import com.playdata.pdfolio.gather.domain.response.GatherResponse;
+import com.playdata.pdfolio.gather.domain.response.GatherSearchResponse;
 import com.playdata.pdfolio.gather.repository.GatherRepository;
 import com.playdata.pdfolio.global.exception.BadRequestException;
 import com.playdata.pdfolio.global.exception.ErrorCode;
@@ -88,10 +88,9 @@ public class GatherService {
         return GatherDetailResponse.fromEntity(gather);
     }
 
-    // 모집글 전체 보기 / 모집글 제목 , 글 내용 , 카테고리 검색
-    public Page<GatherResponse> allGather(PageRequest request, SearchDto searchDto){
-        Page<GatherResponse> all = gatherRepository.findAllByCondition(request,searchDto);
-        return all;
+    public GatherSearchResponse getGathersByCondition(String keyword, GatherCategory category, List<SkillType> skills, PageRequest pageRequest){
+        Page<Gather> result = gatherRepository.findGathersByCondition(keyword, category, skills, pageRequest);
+        return GatherSearchResponse.of(result.getContent(), result.getTotalPages());
     }
 
     private Gather findGatherById(Long gatherId) {
