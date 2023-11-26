@@ -35,7 +35,7 @@ public class Gather extends BaseEntity {
     private int viewCount;
     @ManyToOne
     private Member member;
-    @BatchSize(size = 50)
+    @BatchSize(size = 100)
     @OneToMany(mappedBy = "gather", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GatherSkill> skills = new ArrayList<>();
     @OneToMany(mappedBy = "gather")
