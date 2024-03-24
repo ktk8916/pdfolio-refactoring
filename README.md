@@ -157,7 +157,6 @@ public class AuthService {
 
  - 테스트 코드 60개 작성
  - Jacoco 테스트 커버리지 기존 21% -> 48%
- - 꾸준하게 진행 중
 
 ## 시연
 
